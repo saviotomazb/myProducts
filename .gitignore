@@ -1,0 +1,66 @@
+# Build results
+bin/
+obj/
+out/
+build/
+
+# Rider / VSCode / Visual Studio settings
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*.DS_Store
+Thumbs.db
+
+# Publish profiles
+*.pubxml
+*.publishproj
+
+# Packages
+*.nupkg
+*.snupkg
+packages/
+# Keep NuGet.config if needed
+!**/packages/build/
+
+# Entity Framework migrations history
+Migrations/
+
+# User secrets / credentials
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+# Cache and generated files
+.project/
+.cache/
+dist/
+wwwroot/lib/
+node_modules/
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Docker
+docker-compose.override.yml
