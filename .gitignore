@@ -64,3 +64,6 @@ TestResults/
 
 # Docker
 docker-compose.override.yml
+
+# Visual Studio cache
+.vs/
