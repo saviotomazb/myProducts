@@ -1,0 +1,38 @@
+﻿:root {
+    --blue-gradient: linear-gradient(to top, #0056FF, #2E74FF);
+    --blue-bottom: #2E74FF;
+    --blue-hover: #0056FF;
+    --gray-login: #6B7280;
+}
+
+.login__background {
+    background: var(--blue-gradient);
+}
+
+.button--primary {
+    background: var(--blue-bottom);
+    cursor: pointer;
+}
+
+.button--primary:hover {
+    background-color: var(--blue-hover);
+}
+
+.link-secondary {
+    font-weight: 600;
+    color: var(--blue-bottom);
+}
+
+.login__footer{
+    color: var(--gray-login);
+}
+
+.login__input:focus {
+    outline: none;
+    border-color: var(--blue-bottom);
+    border-width: 1px;
+}
+
+.footer__small-text {
+    font-size: 12px;
+}
