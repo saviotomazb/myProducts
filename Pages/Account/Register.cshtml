@@ -28,37 +28,45 @@
                                class="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm form__input focus:ring"
                                required />
                     </div>
-
                     <div class="mt-2">
                         <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
                         <input type="email" id="email" name="email" autocomplete="email"
                                class="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm form__input focus:ring"
                                required />
                     </div>
-
                     <div class="mt-2">
                         <label for="username" class="block text-sm font-medium text-gray-700">Usuário</label>
                         <input type="text" id="username" name="username" autocomplete="username"
                                class="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm form__input focus:ring"
                                required />
                     </div>
-
                     <div class="mt-2">
                         <label for="passwordhash" class="block text-sm font-medium text-gray-700">Senha</label>
                         <input type="password" id="password" name="password" autocomplete="new-password"
                                class="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm form__input focus:ring"
                                required />
                     </div>
-
-                    <div class="mt-2">
+                    <div class="mt-2 mb-2">
                         <label for="repasswordhash" class="block text-sm font-medium text-gray-700">Confirme a senha</label>
                         <input type="password" id="repassword" name="repassword" autocomplete="new-password"
                                class="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm form__input focus:ring"
                                required />
+                        <p id="password-match" class="text-xs mt-1"></p>
                     </div>
-
-                    <button type="submit" class="w-full text-white py-2 rounded-lg transition button--primary mt-8">Criar conta</button>
-
+                    <div class="mt-2">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="password-strength-bar" class="h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p id="password-strength-text" class="text-xs mt-1"></p>
+                    </div>
+                    <ul id="password-requirements" class="mt-2 text-sm space-y-1">
+                        <li id="req-length" class="text-red-600">Mínimo de 8 caracteres</li>
+                        <li id="req-upper" class="text-red-600">Pelo menos 1 letra maiúscula</li>
+                        <li id="req-lower" class="text-red-600">Pelo menos 1 letra minúscula</li>
+                        <li id="req-number" class="text-red-600">Pelo menos 1 número</li>
+                        <li id="req-special" class="text-red-600">Pelo menos 1 caractere especial</li>
+                    </ul>
+                    <button type="submit" class="w-full text-white py-2 rounded-lg transition button--primary mt-6">Criar conta</button>
                     <p class="text-center mt-6 text-xs">
                         Já possui uma conta?
                         <a asp-page="/Account/Login" class="text-xs link-secondary underline">Entrar</a>
@@ -72,5 +80,6 @@
             <p class="md:text-base login__footer footer__small-text">v1.0</p>
         </div>
     </footer>
+    <script src="~/js/password-validation.js"></script>
 </body>
 </html>
