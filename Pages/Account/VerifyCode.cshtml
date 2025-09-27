@@ -1,71 +1,48 @@
 ﻿@page
 @model myProducts.Pages.Account.VerifyCodeModel
 @{
-    Layout = null;
+    Layout = "~/Pages/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = "Validar código";
 }
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validar código - myProducts</title>
-    <link rel="icon" type="image/x-icon" href="~/images/Icon.ico">
-    <link href="~/css/output.css" rel="stylesheet">
-    <link href="~/css/site.css" rel="stylesheet">
-</head>
-<body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
-    <main class="flex-1 flex items-center justify-center p-4">
-        <section class="flex flex-col md:flex-row bg-white rounded-2xl shadow-lg overflow-hidden max-w-3xl w-full">
-            <div class="w-full md:w-1/2 flex items-center justify-center p-8 login__background order-1 md:order-2">
-                <img src="~/images/Logotipo_branco.png" alt="Logotipo da Loja" class="max-h-40">
-            </div>
-            <div class="w-full md:w-1/2 p-8 order-2 md:order-1">
-                <h2 class="text-2xl font-bold mb-2 text-center">Validar código de segurança</h2>
-                <p class="text-center text-sm mb-6">
-                    Digite o código de 5 dígitos enviado por SMS
-                </p>
-                <form method="post" role="form" aria-describedby="codigoHelp">
-                    <div class="flex flex-wrap gap-3 justify-center">
-                        <input type="tel" maxlength="1" inputmode="numeric"
-                               class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
-                               aria-label="Dígito 1" autocomplete="one-time-code" />
+@section AuthTitle {
+    Validar código de segurança
+}
 
-                        <input type="tel" maxlength="1" inputmode="numeric"
-                               class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
-                               aria-label="Dígito 2" />
+<form method="post" role="form" aria-describedby="codigoHelp">
+    <div class="flex flex-wrap gap-3 justify-center">
+        <input type="tel" maxlength="1" inputmode="numeric"
+                class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
+                aria-label="Dígito 1" autocomplete="one-time-code" />
 
-                        <input type="tel" maxlength="1" inputmode="numeric"
-                               class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
-                               aria-label="Dígito 3" />
+        <input type="tel" maxlength="1" inputmode="numeric"
+                class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
+                aria-label="Dígito 2" />
 
-                        <input type="tel" maxlength="1" inputmode="numeric"
-                               class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
-                               aria-label="Dígito 4" />
+        <input type="tel" maxlength="1" inputmode="numeric"
+                class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
+                aria-label="Dígito 3" />
 
-                        <input type="tel" maxlength="1" inputmode="numeric"
-                               class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
-                               aria-label="Dígito 5" />
-                    </div>
-                    <p id="errorMessage" class="text-red-600 text-center mt-3 text-xs hidden">
-                        Por favor, preencha todos os 5 dígitos
-                    </p>
-                    <button type="submit" class="w-full text-white py-2 rounded-lg transition button--primary mt-6">
-                        Validar
-                    </button>
-                    <p class="text-center mt-6 text-xs">
-                        Não recebeu o código?
-                        <a asp-page="/Account/ForgotPassword" class="link-secondary underline">Reenviar</a>
-                    </p>
-                </form>
-            </div>
-        </section>
-    </main>
-    <footer class="bg-gray-100 py-1 mt-auto">
-        <div class="container mx-auto px-4 text-center">
-            <p class="md:text-base login__footer footer__small-text">v1.0</p>
-        </div>
-    </footer>
+        <input type="tel" maxlength="1" inputmode="numeric"
+                class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
+                aria-label="Dígito 4" />
+
+        <input type="tel" maxlength="1" inputmode="numeric"
+                class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
+                aria-label="Dígito 5" />
+    </div>
+    <p id="errorMessage" class="text-red-600 text-center mt-3 text-xs hidden">
+        Por favor, preencha todos os 5 dígitos
+    </p>
+    <button type="submit" class="w-full text-white py-2 rounded-lg transition button--primary mt-6">
+        Validar
+    </button>
+    <p class="text-center mt-6 text-xs">
+        Não recebeu o código?
+        <a asp-page="/Account/ForgotPassword" class="link-secondary underline">Reenviar</a>
+    </p>
+</form>
+
+@section Scripts {
     <script src="~/js/verify-code.js"></script>
-</body>
-</html>
+}

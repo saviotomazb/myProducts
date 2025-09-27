@@ -1,0 +1,33 @@
+﻿@*
+    Layout para telas de autenticação (ForgotPassword, Login, Register, ResetPassword, VerifyCode)
+*@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - myProducts</title>
+    <link rel="icon" type="image/x-icon" href="~/images/Icon.ico">
+    <link href="~/css/output.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet">
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
+    <main class="flex-1 flex items-center justify-center p-4">
+        <section class="flex flex-col md:flex-row bg-white rounded-2xl shadow-lg overflow-hidden max-w-3xl w-full">
+            <div class="w-full md:w-1/2 flex items-center justify-center p-8 login__background order-1 md:order-2">
+                <img src="~/images/Logotipo_branco.png" alt="Logotipo da Loja" class="max-h-40">
+            </div>
+            <div class="w-full md:w-1/2 p-8 order-2 md:order-1">
+                <h2 class="text-2xl font-bold mb-6 text-center">@RenderSection("AuthTitle", required: true)</h2>
+                @RenderBody()
+            </div>
+        </section>
+    </main>
+    <footer class="bg-gray-100 py-1 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="md:text-base login__footer footer__small-text">v1.0</p>
+        </div>
+    </footer>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
