@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using myProducts.Models.ViewModels;
 using myProducts.Models;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
+using myProducts.Models.ViewModels.Account;
 
 namespace myProducts.Pages.Account
 {

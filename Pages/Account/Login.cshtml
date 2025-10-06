@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page
 @model myProducts.Pages.Account.LoginModel
 @{
     Layout = "~/Pages/Shared/_AuthLayout.cshtml";
@@ -10,21 +10,24 @@
 }
 
 <form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-red-600 text-xs mb-1"></div>
     <div>
         <input type="text"
                 id="username"
-                name="username"
+                asp-for="Input.Username"
                 placeholder="Usuário"
                 class="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm login__input focus:ring"
                 required />
+        <span asp-validation-for="Input.Username" class="text-red-600 text-xs"></span>
     </div>
     <div class="mt-2">
         <input type="password"
                 id="password"
-                name="password"
+                asp-for="Input.Password"
                 placeholder="Senha"
                 class="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm login__input focus:ring"
                 required />
+        <span asp-validation-for="Input.Password" class="text-red-600 text-xs"></span>
     </div>
     <p class="text-right mb-6 mt-2">
         <a asp-page="/Account/ForgotPassword" class="text-xs link-secondary link-secondary underline">Esqueci minha senha</a>

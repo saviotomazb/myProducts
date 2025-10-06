@@ -1,0 +1,25 @@
+﻿@page
+@model myProducts.Pages.Home.IndexModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial - myProducts</title>
+    <link rel="icon" type="image/x-icon" href="~/images/Icon.ico">
+    <link href="~/css/output.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet">
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
+    <a asp-page="/Account/Logout" class="text-sm text-red-600 underline">Sair</a>
+    <footer class="bg-gray-100 py-1 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="md:text-base login__footer footer__small-text">v1.0</p>
+        </div>
+    </footer>
+</body>
+</html>
