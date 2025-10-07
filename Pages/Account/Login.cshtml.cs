@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using myProducts.Models;
 using myProducts.Models.ViewModels.Account;
+using myProducts.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -51,6 +52,7 @@ namespace myProducts.Pages.Account
                 return Page();
             }
 
+            //Configuração do Token de acesso
             var jwtKey = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key não foi configurada.");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
 
@@ -78,6 +80,31 @@ namespace myProducts.Pages.Account
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTime.UtcNow.AddHours(1)
+            });
+
+            //Configuração do Refresh Token
+            var refreshToken = TokenService.GenerateRefreshToken();
+            var refreshTokenHash = TokenService.ComputeHash(refreshToken);
+
+            var userSession = new UserSession
+            {
+                UserId = user.UserId,
+                RefreshTokenHash = refreshTokenHash,
+                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
+                DeviceInfo = Request.Headers["User-Agent"].ToString(),
+                IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
+            };
+
+            _db.UserSessions.Add(userSession);
+            await _db.SaveChangesAsync();
+
+            Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7)
             });
 
             return RedirectToPage("/Home/Index");
