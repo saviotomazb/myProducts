@@ -1,0 +1,11 @@
+﻿@page
+@model myProducts.Pages.Error.IndexModel
+@{
+    Layout = "~/Pages/Shared/_ErrorLayout.cshtml";
+    ViewData["Title"] = "Erro";
+}
+
+<img src="~/images/Disconnect.png" alt="Erro" class="w-32 sm:w-40 h-32 sm:h-40 mb-6" />
+<h1 class="text-2xl font-bold text-gray-800 mb-2">Ocorreu um erro inesperado</h1>
+<p class="text-gray-600 mb-6">Algo deu errado durante o processamento da sua solicitação.<br />Por favor, tente novamente mais tarde.</p>
+<a asp-page="/Account/Login" class="text-white px-6 py-2 rounded-lg transition button--primary">Voltar para o login</a>

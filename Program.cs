@@ -31,6 +31,7 @@ builder.Services.AddAuthentication(options =>
 
         options.Events = new JwtBearerEvents
         {
+            //Realiza a leitura do token no cookie
             OnMessageReceived = context =>
             {
                 var token = context.Request.Cookies["AuthToken"];
@@ -40,6 +41,7 @@ builder.Services.AddAuthentication(options =>
                 }
                 return Task.CompletedTask;
             },
+            //Evento disparado quando o usuário não possui um token válido (substituindo o evento padrão 401 unauthorized)
             OnChallenge = context =>
             {
                 context.HandleResponse();
@@ -47,6 +49,7 @@ builder.Services.AddAuthentication(options =>
                 context.Response.Redirect("/Account/Login");
                 return Task.CompletedTask;
             },
+            //Esse evento dispara quando o usuário possui token válido, porém não tem permissão para acessar determinado recurso
             OnForbidden = context =>
             {
                 context.Response.Redirect("/Account/Login");
@@ -65,12 +68,11 @@ builder.Services.AddDbContext<MyproductsContext>(options => options.UseSqlServer
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//Redireciona o usuário para a página /Error/Index quando a aplicação apresenta alguma exceção ou status code em produção
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
 }
 
 app.UseHttpsRedirection();
