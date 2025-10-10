@@ -1,26 +1,86 @@
 ﻿@page
 @model myProducts.Pages.Home.IndexModel
 @{
-    Layout = null;
+    Layout = "~/Pages/Shared/App/_MainLayout.cshtml";
+    ViewData["Title"] = "Página Inicial";
 }
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial - myProducts</title>
-    <link rel="icon" type="image/x-icon" href="~/images/Icon.ico">
-    <link href="~/css/output.css" rel="stylesheet">
-    <link href="~/css/site.css" rel="stylesheet">
-</head>
-<body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
-    <a asp-page="/Account/Logout" class="text-sm text-red-600 underline">Sair</a>
-    <footer class="bg-gray-100 py-1 mt-auto">
-        <div class="container mx-auto px-4 text-center">
-            <p class="md:text-base login__footer footer__small-text">v1.0</p>
-        </div>
-    </footer>
-    <script src="~/js/refresh-token.js"></script>
-</body>
-</html>
+<div class="
+                flex flex-1 flex-col
+                items-center justify-center
+                pt-16 sm:pt-20 lg:pt-24
+                px-4 sm:px-6 lg:px-8
+                ">
+    <div class="
+                    flex flex-wrap
+                    justify-center
+                    gap-6 sm:gap-y-8 lg:gap-y-10
+                    pt-8 sm:pt-12 lg:pt-16
+                    pb-8 sm:pb-12 lg:pb-16
+                    ">
+        <a asp-page="/Categories/Index" class="
+                                                    w-64 sm:w-72 lg:w-80
+                                                    login__background
+                                                    shadow-md
+                                                    rounded-lg sm:rounded-xl
+                                                    overflow-hidden
+                                                    hover:shadow-xl hover:scale-105
+                                                    transition-transform
+                                                    duration-200
+                                                    ">
+            <img src="~/images/Categoria.png" alt="Imagem 1" class="w-20 h-20 object-cover mx-auto mt-4">
+            <div class="p-4 text-center">
+                <h3 class="text-lg font-semibold mb-2 text-white">Categorias</h3>
+                <p class="text-white text-sm sm:text-base">Organize seus produtos por grupos</p>
+            </div>
+        </a>
+        <a asp-page="/Dashboard/Index" class="
+                                                    w-64 sm:w-72 lg:w-80
+                                                    login__background
+                                                    shadow-md
+                                                    rounded-lg sm:rounded-xl
+                                                    overflow-hidden
+                                                    hover:shadow-xl hover:scale-105
+                                                    transition-transform
+                                                    duration-200
+                                                    ">
+            <img src="~/images/Dashboard.png" alt="Imagem 2" class="w-20 h-20 object-cover mx-auto mt-4">
+            <div class="p-4 text-center">
+                <h3 class="text-lg font-semibold mb-2 text-white">Dashboards</h3>
+                <p class="text-white text-sm sm:text-base">Visualize seus dados de forma rápida</p>
+            </div>
+        </a>
+        <a asp-page="/Quotes/Index" class="
+                                                w-64 sm:w-72 lg:w-80
+                                                login__background
+                                                shadow-md
+                                                rounded-lg sm:rounded-xl
+                                                overflow-hidden
+                                                hover:shadow-xl hover:scale-105
+                                                transition-transform
+                                                duration-200
+                                                ">
+            <img src="~/images/Orcamento.png" alt="Imagem 3" class="w-20 h-20 object-cover mx-auto mt-4">
+            <div class="p-4 text-center">
+                <h3 class="text-lg font-semibold mb-2 text-white">Orçamentos</h3>
+                <p class="text-white text-sm sm:text-base">Crie e acompanhe orçamentos facilmente</p>
+            </div>
+        </a>
+        <a asp-page="/Products/Index" class="
+                                                    w-64 sm:w-72 lg:w-80
+                                                    login__background
+                                                    shadow-md
+                                                    rounded-lg sm:rounded-xl
+                                                    overflow-hidden
+                                                    hover:shadow-xl hover:scale-105
+                                                    transition-transform
+                                                    duration-200
+                                                    ">
+            <img src="~/images/Produtos.png" alt="Imagem 4" class="w-20 h-20 object-cover mx-auto mt-4">
+            <div class="p-4 text-center">
+                <h3 class="text-lg font-semibold mb-2 text-white">Produtos</h3>
+                <p class="text-white text-sm sm:text-base">Gerencie todos os seus produtos</p>
+            </div>
+        </a>
+    </div>
+</div>

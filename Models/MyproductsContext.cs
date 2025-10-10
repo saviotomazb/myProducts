@@ -158,7 +158,59 @@ public partial class MyproductsContext : DbContext
                 .IsUnicode(false);
         });
 
-        OnModelCreatingPartial(modelBuilder);
+        modelBuilder.Entity<UserSession>(entity =>
+        {
+            entity.HasKey(e => e.SessionId).HasName("PK_USERSESSIONS");
+
+            entity.ToTable("USERSESSIONS");
+
+            entity.Property(e => e.SessionId)
+                .HasColumnName("SessionId")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.UserId)
+                .HasColumnName("UserId")
+                .IsRequired();
+
+            entity.Property(e => e.RefreshTokenHash)
+                .HasColumnName("RefreshTokenHash")
+                .HasColumnType("varbinary(32)")
+                .IsRequired();
+
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("CreatedAt")
+                .HasColumnType("datetime2(7)")
+                .HasDefaultValueSql("SYSUTCDATETIME()")
+                .IsRequired();
+
+            entity.Property(e => e.ExpiresAt)
+                .HasColumnName("ExpiresAt")
+                .HasColumnType("datetime2(7)")
+                .IsRequired();
+
+            entity.Property(e => e.RevokedAt)
+                .HasColumnName("RevokedAt")
+                .HasColumnType("datetime2(7)");
+
+            entity.Property(e => e.ReplacedBySessionId)
+                .HasColumnName("ReplacedBySessionId");
+
+            entity.Property(e => e.DeviceInfo)
+                .HasColumnName("DeviceInfo")
+                .HasMaxLength(200);
+
+            entity.Property(e => e.IpAddress)
+                .HasColumnName("IpAddress")
+                .HasMaxLength(50);
+
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.UserSessions)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_USERSESSIONS_USERS");
+        });
+
+            OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

@@ -1,7 +1,7 @@
 ﻿@page
 @model myProducts.Pages.Account.LoginModel
 @{
-    Layout = "~/Pages/Shared/_AuthLayout.cshtml";
+    Layout = "~/Pages/Shared/Auth/_AuthLayout.cshtml";
     ViewData["Title"] = "Login";
 }
 
@@ -30,7 +30,7 @@
         <span asp-validation-for="Input.Password" class="text-red-600 text-xs"></span>
     </div>
     <p class="text-right mb-6 mt-2">
-        <a asp-page="/Account/ForgotPassword" class="text-xs link-secondary link-secondary underline">Esqueci minha senha</a>
+        <a asp-page="/Account/ForgotPassword" class="text-xs link-secondary underline">Esqueci minha senha</a>
     </p>
     <button type="submit" class="w-full text-white py-2 rounded-lg transition button--primary">Entrar</button>
     <p class="text-center mt-6 text-xs">

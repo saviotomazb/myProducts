@@ -61,7 +61,8 @@ namespace myProducts.Pages.Account
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim("FullName", user.FullName)
             };
 
             var token = new JwtSecurityToken(

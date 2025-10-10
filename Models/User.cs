@@ -20,4 +20,6 @@ public partial class User
     public bool IsActive { get; set; }
 
     public virtual ICollection<Quote> Quotes { get; set; } = new List<Quote>();
+
+    public virtual ICollection<UserSession> UserSessions { get; set; } = new List<UserSession>();
 }

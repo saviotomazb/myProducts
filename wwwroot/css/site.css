@@ -18,6 +18,10 @@
     background-color: var(--blue-hover);
 }
 
+.link__navbar:hover {
+    color: var(--blue-bottom);
+}
+
 .link-secondary {
     font-weight: 600;
     color: var(--blue-bottom);

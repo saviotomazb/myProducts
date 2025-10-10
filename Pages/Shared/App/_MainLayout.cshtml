@@ -1,0 +1,33 @@
+﻿@*
+    Layout para telas após o usuário ter realizado a autenticação
+*@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - myProducts</title>
+    <link rel="icon" type="image/x-icon" href="~/images/Icon.ico">
+    <link href="~/css/output.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet">
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
+
+    @await Html.PartialAsync("~/Pages/Shared/App/_Navbar.cshtml")
+
+    @RenderBody()
+
+    <footer class="bg-gray-100 py-6 sm:py-4 mt-auto shadow-inner px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto text-center text-gray-600 text-sm">
+            <p>
+                © 2025 Todos os direitos reservados. Desenvolvido por
+                <a href="https://github.com/saviotomazb" target="_blank" class="hover:underline link-secondary">
+                    @@saviotomazb
+                </a>
+            </p>
+        </div>
+    </footer>
+    <script src="~/js/account/refresh-token.js"></script>
+</body>
+</html>
