@@ -8,6 +8,9 @@
         if (refreshed) {
             response = await fetch(url, options);
         }
+        else {
+            return response;
+        }
     }
 
     return response;
@@ -27,7 +30,7 @@ async function refreshToken() {
         }
 
         const data = await response.json();
-        console.log(data.message);
+        console.log('Refresh Token', data.message);
         return true;
     } catch (error) {
         console.error('Erro ao tentar renovar o token:', error);

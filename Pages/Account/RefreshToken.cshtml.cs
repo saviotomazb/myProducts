@@ -15,11 +15,13 @@ namespace myProducts.Pages.Account
     {
         private readonly MyproductsContext _db;
         private readonly IConfiguration _configuration;
+        private readonly UserSessionService _userSessionService;
 
-        public RefreshTokenModel(MyproductsContext db, IConfiguration configuration)
+        public RefreshTokenModel(MyproductsContext db, IConfiguration configuration, UserSessionService sessionService)
         {
             _db = db;
             _configuration = configuration;
+            _userSessionService = sessionService;
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -31,61 +33,24 @@ namespace myProducts.Pages.Account
                 return new JsonResult(new { message = "Refresh token ausente" })
                 { StatusCode = 401 };
             }
+
             var refreshTokenHash = TokenService.ComputeHash(refreshToken);
 
-            var session = await _db.UserSessions.Include(s => s.User).FirstOrDefaultAsync(s => s.RefreshTokenHash == refreshTokenHash && s.RevokedAt == null && s.ExpiresAt > DateTime.UtcNow);
+            var oldSession = await _db.UserSessions.Include(s => s.User).FirstOrDefaultAsync(s => s.RefreshTokenHash == refreshTokenHash && s.RevokedAt == null && s.ExpiresAt > DateTime.UtcNow);
 
-            if (session == null)
+            if (oldSession == null)
             {
                 return new JsonResult(new { message = "Refresh token inválido ou expirado" })
                 { StatusCode = 401 };
             }
 
-            var newRefreshToken = TokenService.GenerateRefreshToken();
-            var newRefreshTokenHash = TokenService.ComputeHash(newRefreshToken);
+            var newRefreshToken = await _userSessionService.CreateSessionAsync(oldSession.User, Request);
 
-            var newSession = new UserSession
-            {
-                UserId = session.UserId,
-                RefreshTokenHash = newRefreshTokenHash,
-                CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddDays(7),
-                DeviceInfo = Request.Headers["User-Agent"].ToString(),
-                IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
-            };
+            await _userSessionService.RevokeSessionAsync(oldSession);
 
-            _db.UserSessions.Add(newSession);
-            await _db.SaveChangesAsync();
+            var jwtToken = TokenService.GenerateJwtToken(_configuration, oldSession.User.Username, oldSession.User.UserId, oldSession.User.FullName);
 
-            //Define a sessão antiga como revogada
-            session.RevokedAt = DateTime.UtcNow;
-            session.ReplacedBySessionId = newSession.SessionId;
-
-            await _db.SaveChangesAsync();
-
-            var jwtKey = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key não foi configurada.");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, session.User.Username),
-                new Claim(ClaimTypes.NameIdentifier, session.User.UserId.ToString()),
-                new Claim("FullName", session.User.FullName)
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: creds
-                );
-
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-            Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
+            Response.Cookies.Append("AuthToken", jwtToken, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,

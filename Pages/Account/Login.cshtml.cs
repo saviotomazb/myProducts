@@ -16,11 +16,13 @@ namespace myProducts.Pages.Account
     {
         private readonly MyproductsContext _db;
         private readonly IConfiguration _configuration;
+        private readonly UserSessionService _userSessionService;
 
-        public LoginModel(MyproductsContext db, IConfiguration configuration)
+        public LoginModel(MyproductsContext db, IConfiguration configuration, UserSessionService sessionService)
         {
             _db = db;
             _configuration = configuration;
+            _userSessionService = sessionService;
         }
 
         [BindProperty]
@@ -52,28 +54,7 @@ namespace myProducts.Pages.Account
                 return Page();
             }
 
-            //Configuração do Token de acesso
-            var jwtKey = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key não foi configurada.");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim("FullName", user.FullName)
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: creds
-                );
-
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenString = TokenService.GenerateJwtToken(_configuration, user.Username, user.UserId, user.FullName);
 
             Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
             {
@@ -83,22 +64,7 @@ namespace myProducts.Pages.Account
                 Expires = DateTime.UtcNow.AddHours(1)
             });
 
-            //Configuração do Refresh Token
-            var refreshToken = TokenService.GenerateRefreshToken();
-            var refreshTokenHash = TokenService.ComputeHash(refreshToken);
-
-            var userSession = new UserSession
-            {
-                UserId = user.UserId,
-                RefreshTokenHash = refreshTokenHash,
-                CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddDays(7),
-                DeviceInfo = Request.Headers["User-Agent"].ToString(),
-                IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
-            };
-
-            _db.UserSessions.Add(userSession);
-            await _db.SaveChangesAsync();
+            var refreshToken = await _userSessionService.CreateSessionAsync(user, Request);
 
             Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
             {
