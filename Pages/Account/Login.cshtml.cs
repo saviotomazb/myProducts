@@ -110,27 +110,5 @@ namespace myProducts.Pages.Account
 
             return RedirectToPage("/Home/Index");
         }
-
-        private static class PasswordHelper
-        {
-            public static bool VerifyPassword(string password, byte[] storedPasswordHashWithSalt)
-            {
-                byte[] salt = new byte[16];
-                Buffer.BlockCopy(storedPasswordHashWithSalt, 0, salt, 0, 16);
-
-                byte[] storedHash = new byte[32];
-                Buffer.BlockCopy(storedPasswordHashWithSalt, 16, storedHash, 0, 32);
-
-                byte[] computedHash = Rfc2898DeriveBytes.Pbkdf2(
-                    Encoding.UTF8.GetBytes(password),
-                    salt,
-                    iterations: 100_000,
-                    hashAlgorithm: HashAlgorithmName.SHA256,
-                    outputLength: 32
-                );
-
-                return CryptographicOperations.FixedTimeEquals(computedHash, storedHash);
-            }
-        }
     }
 }

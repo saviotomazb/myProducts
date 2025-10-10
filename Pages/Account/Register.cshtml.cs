@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using myProducts.Models;
+using myProducts.Services;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
@@ -50,18 +51,7 @@ namespace myProducts.Pages.Account
                 return Page();
             }
 
-            byte[] salt = RandomNumberGenerator.GetBytes(16);
-            byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
-                Encoding.UTF8.GetBytes(Input.Password),
-                salt,
-                iterations: 100_000,
-                hashAlgorithm: HashAlgorithmName.SHA256,
-                outputLength: 32
-            );
-
-            byte[] passwordHashWithSalt = new byte[salt.Length + hash.Length];
-            Buffer.BlockCopy(salt, 0, passwordHashWithSalt, 0, salt.Length);
-            Buffer.BlockCopy(hash, 0, passwordHashWithSalt, salt.Length, hash.Length);
+            var passwordHashWithSalt = PasswordHelper.HashPassword(Input.Password);
 
             var user = new User
             {
