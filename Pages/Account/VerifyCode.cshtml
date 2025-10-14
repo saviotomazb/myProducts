@@ -11,29 +11,31 @@
 
 <form method="post" role="form" aria-describedby="codigoHelp">
     <div class="flex flex-wrap gap-3 justify-center">
-        <input type="tel" maxlength="1" inputmode="numeric"
+        <input type="tel" maxlength="1" inputmode="numeric" name="Input.Digit1"
                 class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
                 aria-label="Dígito 1" autocomplete="one-time-code" />
 
-        <input type="tel" maxlength="1" inputmode="numeric"
+        <input type="tel" maxlength="1" inputmode="numeric" name="Input.Digit2"
                 class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
                 aria-label="Dígito 2" />
 
-        <input type="tel" maxlength="1" inputmode="numeric"
+        <input type="tel" maxlength="1" inputmode="numeric" name="Input.Digit3"
                 class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
                 aria-label="Dígito 3" />
 
-        <input type="tel" maxlength="1" inputmode="numeric"
+        <input type="tel" maxlength="1" inputmode="numeric" name="Input.Digit4"
                 class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
                 aria-label="Dígito 4" />
 
-        <input type="tel" maxlength="1" inputmode="numeric"
+        <input type="tel" maxlength="1" inputmode="numeric" name="Input.Digit5"
                 class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
                 aria-label="Dígito 5" />
     </div>
-    <p id="errorMessage" class="text-red-600 text-center mt-3 text-xs hidden">
-        Por favor, preencha todos os 5 dígitos
-    </p>
+
+    <input type="hidden" asp-for="Input.Code" id="hiddenCode" />
+
+    <span asp-validation-for="Input.Code" class="text-red-600 text-center mt-3 text-xs block"></span>
+
     <button type="submit" class="w-full text-white py-2 rounded-lg transition button--primary mt-6">
         Validar
     </button>

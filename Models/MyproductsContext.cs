@@ -29,6 +29,8 @@ public partial class MyproductsContext : DbContext
 
     public virtual DbSet<UserSession> UserSessions { get; set; }
 
+    public virtual DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
@@ -210,7 +212,20 @@ public partial class MyproductsContext : DbContext
                 .HasConstraintName("FK_USERSESSIONS_USERS");
         });
 
-            OnModelCreatingPartial(modelBuilder);
+        modelBuilder.Entity<PasswordResetCode>(entity =>
+        {
+            entity.ToTable("PASSWORDRESETCODE");
+            entity.HasKey(e => e.PasswordId);
+            entity.Property(e => e.Code).HasMaxLength(5).IsRequired();
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATETIME()");
+            entity.HasOne(e => e.User)
+                  .WithMany(u => u.PasswordResetCodes)
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

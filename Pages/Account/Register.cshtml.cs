@@ -51,7 +51,7 @@ namespace myProducts.Pages.Account
                 return Page();
             }
 
-            var passwordHashWithSalt = PasswordHelper.HashPassword(Input.Password);
+            var passwordHashWithSalt = PasswordService.HashPassword(Input.Password);
 
             var user = new User
             {
@@ -70,7 +70,7 @@ namespace myProducts.Pages.Account
             return RedirectToPage("/Account/Login");
         }
 
-        private bool IsPasswordValid(string password)
+        static private bool IsPasswordValid(string password)
         {
             if (password.Length < 8)
                 return false;

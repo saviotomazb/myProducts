@@ -1,9 +1,16 @@
-﻿const inputs = document.querySelectorAll(".code-input");
-const errorMessage = document.getElementById("errorMessage");
+﻿const form = document.querySelector("form");
+const inputs = document.querySelectorAll(".code-input");
+const hiddenCode = document.getElementById("hiddenCode");
+const validationSpan = document.querySelector('[asp-validation-for="Input.Code"]');
 
 // Função para juntar os valores dos inputs
 function getCode() {
     return Array.from(inputs).map(input => input.value).join("");
+}
+
+// Atualiza o campo oculto
+function updateHiddenCode() {
+    hiddenCode.value = getCode();
 }
 
 // Apenas retorna se todos os inputs estão preenchidos
@@ -17,12 +24,14 @@ inputs.forEach((input, index) => {
         if (input.value.length === 1 && index < inputs.length - 1) {
             inputs[index + 1].focus();
         }
+        updateHiddenCode();
     });
 
     input.addEventListener("keydown", (e) => {
         if (e.key === "Backspace" && !input.value && index > 0) {
             inputs[index - 1].focus();
         }
+        updateHiddenCode();
     });
 
     input.addEventListener("paste", (e) => {
@@ -38,15 +47,18 @@ inputs.forEach((input, index) => {
 
         const lastIndex = Math.min(index + chars.length - 1, inputs.length - 1);
         inputs[lastIndex].focus();
+
+        updateHiddenCode();
     });
 });
 
-// Mostrar mensagem de erro apenas ao tentar enviar o formulário
-document.querySelector("form").addEventListener("submit", function (e) {
+// Validação antes do submit
+form.addEventListener("submit", (e) => {
+    updateHiddenCode();
     if (!isComplete()) {
         e.preventDefault();
-        errorMessage.classList.remove("hidden"); // Exibe mensagem de erro
+        validationSpan.textContent = "Preencha todos os 5 dígitos";
     } else {
-        errorMessage.classList.add("hidden"); // Oculta a mensagem se estiver correto
+        validationSpan.textContent = "";
     }
 });

@@ -34,7 +34,7 @@ namespace myProducts.Services
             return refreshToken;
         }
 
-        public async Task RevokeSessionAsync(UserSession session, UserSession replacedBy = null)
+        public async Task RevokeSessionAsync(UserSession session, UserSession? replacedBy = null)
         {
             session.RevokedAt = DateTime.UtcNow;
             if (replacedBy != null)

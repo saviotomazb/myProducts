@@ -41,7 +41,7 @@ namespace myProducts.Pages.Account
 
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == Input.Username);
 
-            if (user == null || !PasswordHelper.VerifyPassword(Input.Password, user.PasswordHash))
+            if (user == null || !PasswordService.VerifyPassword(Input.Password, user.PasswordHash))
             {
                 ModelState.AddModelError(string.Empty, "Usuário ou senha incorretos");
 
