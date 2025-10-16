@@ -68,7 +68,9 @@ builder.Services.AddAuthorization();
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<MyproductsContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+
+builder.Services.AddDbContext<MyproductsContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<UserSessionService>();
 
@@ -115,7 +117,7 @@ Log.Logger = new LoggerConfiguration()
     })
 
     .WriteTo.MSSqlServer(
-        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+        connectionString: Environment.GetEnvironmentVariable("DefaultConnection"),
         sinkOptions: new MSSqlServerSinkOptions
         {
             TableName = "LOGS",
@@ -139,7 +141,7 @@ Log.Logger = new LoggerConfiguration()
     })
 
     .WriteTo.MSSqlServer(
-        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+        connectionString: Environment.GetEnvironmentVariable("DefaultConnection"),
         sinkOptions: new MSSqlServerSinkOptions
         {
             TableName = "LOGS",
