@@ -1,6 +1,8 @@
 ﻿using Azure.Core;
 using Microsoft.Extensions.Configuration;
 using myProducts.Models;
+using Serilog;
+using Log = Serilog.Log;
 
 namespace myProducts.Services
 {
@@ -31,6 +33,9 @@ namespace myProducts.Services
             _db.UserSessions.Add(session);
             await _db.SaveChangesAsync();
 
+            Log.ForContext("SourceContext", "myProducts.Services.UserSessionService").Information("Sessão criada para UserId {UserId} com IP {IpAddress} e Device {DeviceInfo}",
+                user.UserId, session.IpAddress, session.DeviceInfo);
+
             return refreshToken;
         }
 
@@ -43,6 +48,9 @@ namespace myProducts.Services
             }
 
             await _db.SaveChangesAsync();
+
+            Log.ForContext("SourceContext", "myProducts.Services.UserSessionService").Information("Sessão revogada SessionId {SessionId} para UserId {UserId}",
+                session.SessionId, session.UserId);
         }
     }
 }

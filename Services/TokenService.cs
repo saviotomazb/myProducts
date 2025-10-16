@@ -5,6 +5,8 @@ using System.Net.NetworkInformation;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Serilog;
+using Log = Serilog.Log;
 
 namespace myProducts.Services
 {
@@ -32,6 +34,8 @@ namespace myProducts.Services
                 signingCredentials: creds
                 );
 
+            Log.ForContext("SourceContext", "myProducts.Services.TokenService").Information("Gerando JWT para usuário {UserId} ({Username})", userId, username);
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
@@ -40,6 +44,7 @@ namespace myProducts.Services
             var randomBytes = new byte[64];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomBytes);
+            Log.ForContext("SourceContext", "myProducts.Services.TokenService").Information("Gerando refresh token.");
             return Convert.ToBase64String(randomBytes);
         }
 

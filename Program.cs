@@ -4,6 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using myProducts.Models;
 using myProducts.Services;
 using System.Text;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
+using Log = Serilog.Log;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,7 +72,117 @@ builder.Services.AddDbContext<MyproductsContext>(options => options.UseSqlServer
 
 builder.Services.AddScoped<UserSessionService>();
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", Serilog.Events.LogEventLevel.Error)
+    .MinimumLevel.Override("Microsoft.AspNetCore.StaticFiles", Serilog.Events.LogEventLevel.Error)
+
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", "MyProducts")
+
+    .WriteTo.Console(restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
+
+    .Filter.ByExcluding(logEvent =>
+    {
+        if (logEvent.Properties.TryGetValue("RequestPath", out var pathValue))
+        {
+            var path = pathValue.ToString().Trim('"').ToLower();
+            if (path.StartsWith("/css") ||
+                path.StartsWith("/js") ||
+                path.StartsWith("/images") ||
+                path.StartsWith("/fonts") ||
+                path.Contains("favicon.ico"))
+            {
+                return true;
+            }
+        }
+
+        if (logEvent.Properties.TryGetValue("SourceContext", out var sourceValue))
+        {
+            var source = sourceValue.ToString();
+            if (source.Contains("Microsoft.AspNetCore.StaticFiles") ||
+                source.Contains("Microsoft.AspNetCore.Hosting.Diagnostics"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    })
+
+    .WriteTo.MSSqlServer(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+        sinkOptions: new MSSqlServerSinkOptions
+        {
+            TableName = "LOGS",
+            AutoCreateSqlTable = false
+        },
+        restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning
+    )
+
+    .WriteTo.Logger(lc => lc
+    .Filter.ByIncludingOnly(evt =>
+    {
+        if (evt.Properties.TryGetValue("SourceContext", out var src))
+        {
+            var source = src is Serilog.Events.ScalarValue scalar
+                ? scalar.Value?.ToString()
+                : src.ToString();
+
+            return !string.IsNullOrEmpty(source) && source.StartsWith("myProducts.Services");
+        }
+        return false;
+    })
+
+    .WriteTo.MSSqlServer(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+        sinkOptions: new MSSqlServerSinkOptions
+        {
+            TableName = "LOGS",
+            AutoCreateSqlTable = false
+        },
+        restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information
+        )   
+    )
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 var app = builder.Build();
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "Erro não tratado na requisição {Path}", context.Request.Path);
+        throw;
+    }
+});
+
+app.UseSerilogRequestLogging(options =>
+{
+    options.GetLevel = (httpContext, elapsed, ex) =>
+    {
+        var path = httpContext.Request.Path;
+
+        if (path.StartsWithSegments("/css") ||
+            path.StartsWithSegments("/js") ||
+            path.StartsWithSegments("/images") ||
+            path.StartsWithSegments("/fonts") ||
+            path.StartsWithSegments("/favicon.ico"))
+        {
+            return Serilog.Events.LogEventLevel.Debug;
+        }
+
+        return ex != null ? Serilog.Events.LogEventLevel.Error : Serilog.Events.LogEventLevel.Information;
+    };
+});
 
 //Redireciona o usuário para a página /Error/Index quando a aplicação apresenta alguma exceção ou status code em produção
 if (!app.Environment.IsDevelopment())

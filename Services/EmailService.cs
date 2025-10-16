@@ -1,5 +1,6 @@
 ﻿using System.Net.Mail;
 using System.Net;
+using Serilog;
 
 namespace myProducts.Services
 {
@@ -17,11 +18,14 @@ namespace myProducts.Services
                 string.IsNullOrWhiteSpace(_smtpUser) ||
                 string.IsNullOrWhiteSpace(_smtpPass))
             {
+                Log.Error("As variáveis de ambiente SMTP não estão completamente configuradas: Host={Host}, Port={Port}, User={User}, PassConfigured={PassConfigured}",
+                    _smtpHost, _smtpPort, _smtpUser, !string.IsNullOrWhiteSpace(_smtpPass));
                 throw new InvalidOperationException("As variáveis de ambiente SMTP não estão completamente configuradas.");
             }
 
             if (!int.TryParse(_smtpPort, out int smtpPort))
             {
+                Log.Error("A variável SMTP_PORT não é um número válido: {SMTP_PORT}", _smtpPort);
                 throw new InvalidOperationException("A variável SMTP_PORT deve ser um número válido.");
             }
 
@@ -47,16 +51,16 @@ namespace myProducts.Services
             try
             {
                 await client.SendMailAsync(mailMessage);
-                Console.WriteLine($"E-mail de redefinição enviado para: {recipientEmail}");
+                Log.ForContext("SourceContext", "myProducts.Services.EmailService").Information("E-mail de redefinição enviado para: {RecipientEmail}", recipientEmail);
             }
             catch (SmtpException ex)
             {
-                Console.WriteLine($"Erro SMTP: {ex.Message}");
+                Log.Error(ex, "Erro SMTP ao enviar e-mail para: {RecipientEmail}", recipientEmail);
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao enviar e-mail: {ex.Message}");
+                Log.Error(ex, "Erro ao enviar e-mail: {RecipientEmail}", recipientEmail);
                 throw;
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using Serilog;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -34,7 +35,10 @@ namespace myProducts.Services
                 outputLength: 32
             );
 
-            return CryptographicOperations.FixedTimeEquals(computedHash, storedHash);
+            bool result = CryptographicOperations.FixedTimeEquals(computedHash, storedHash);
+            Log.Debug("Resultado da verificação: {Result}", result);
+
+            return result;
         }
 
         public static byte[] HashPassword(string password)
@@ -63,36 +67,42 @@ namespace myProducts.Services
             if (string.IsNullOrWhiteSpace(password))
             {
                 errorMessage = "Informe a senha";
+                Log.Warning("Falha de validação de senha: {Reason}", errorMessage);
                 return false;
             }
 
             if (password.Length < 8)
             {
                 errorMessage = "Mínimo de 8 caracteres";
+                Log.Warning("Falha de validação de senha: {Reason}", errorMessage);
                 return false;
             }
 
             if (!UpperRegex().IsMatch(password))
             {
                 errorMessage = "Pelo menos 1 letra maiúscula";
+                Log.Warning("Falha de validação de senha: {Reason}", errorMessage);
                 return false;
             }
 
             if (!LowerRegex().IsMatch(password))
             {
                 errorMessage = "Pelo menos 1 letra minúscula";
+                Log.Warning("Falha de validação de senha: {Reason}", errorMessage);
                 return false;
             }
 
             if (!NumberRegex().IsMatch(password))
             {
                 errorMessage = "Pelo menos 1 número";
+                Log.Warning("Falha de validação de senha: {Reason}", errorMessage);
                 return false;
             }
 
             if (!SpecialRegex().IsMatch(password))
             {
                 errorMessage = "Pelo menos 1 caractere especial";
+                Log.Warning("Falha de validação de senha: {Reason}", errorMessage);
                 return false;
             }
 

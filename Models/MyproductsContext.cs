@@ -31,6 +31,8 @@ public partial class MyproductsContext : DbContext
 
     public virtual DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
 
+    public virtual DbSet<Log> Logs { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
@@ -223,6 +225,18 @@ public partial class MyproductsContext : DbContext
                   .WithMany(u => u.PasswordResetCodes)
                   .HasForeignKey(e => e.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Log>(entity =>
+        {
+            entity.ToTable("LOGS");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Message).IsRequired(false);
+            entity.Property(e => e.MessageTemplate).IsRequired(false);
+            entity.Property(e => e.Level).IsRequired(false);
+            entity.Property(e => e.TimeStamp).IsRequired(false);
+            entity.Property(e => e.Exception).IsRequired(false);
+            entity.Property(e => e.Properties).IsRequired(false);
         });
 
         OnModelCreatingPartial(modelBuilder);
