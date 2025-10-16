@@ -53,7 +53,7 @@ namespace myProducts.Pages.Account
                 return Page();
             }
 
-            if (code.Expiration < DateTime.UtcNow)
+            if (DateTime.UtcNow > code.Expiration)
             {
                 Log.Warning("Código expirado para o usuário: {UserId}", code.UserId);
                 ModelState.AddModelError("Input.Code", "O código expirou. Solicite um novo.");
@@ -62,14 +62,11 @@ namespace myProducts.Pages.Account
                 return Page();
             }
 
-            code.IsActive = false;
-            await _db.SaveChangesAsync();
+            TempData["UserId"] = code.UserId;
+            TempData["Message"] = "Código validado com sucesso. Defina sua nova senha";
 
             Log.ForContext("SourceContext", "myProducts.Pages.Account.VerifyCode").Information
                 ("Código validado com sucesso para o usuário: {UserId}. Código de verificação: {InputCode}", code.UserId, Input.Code);
-
-            TempData["UserId"] = code.UserId;
-            TempData["Message"] = "Código validado com sucesso. Defina sua nova senha";
 
             return RedirectToPage("/Account/ResetPassword");
         }

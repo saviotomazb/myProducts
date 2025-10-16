@@ -88,8 +88,6 @@ namespace myProducts.Pages.Account
             {
                 await EmailService.SendPasswordResetEmailAsync(user.Email, code);
                 TempData["Message"] = "Código de redefinição enviado para o seu e-mail";
-                Log.ForContext("SourceContext", "myProducts.Pages.Account.ForgotPassword").Information
-                    ("E-mail de redefinição enviado para {UserEmail}", user.Email);
                 TempData["ForgotPasswordStarted"] = true;
             }
             catch (Exception ex)
