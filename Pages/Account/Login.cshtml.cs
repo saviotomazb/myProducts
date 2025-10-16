@@ -1,14 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using myProducts.Models;
 using myProducts.Models.ViewModels.Account;
 using myProducts.Services;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
+using Log = Serilog.Log;
 
 namespace myProducts.Pages.Account
 {
@@ -36,6 +32,7 @@ namespace myProducts.Pages.Account
         {
             if (!ModelState.IsValid)
             {
+                Log.Warning("Tentativa de login com dados inválidos: {Username}", Input.Username);
                 return Page();
             }
 
@@ -43,6 +40,9 @@ namespace myProducts.Pages.Account
 
             if (user == null || !PasswordService.VerifyPassword(Input.Password, user.PasswordHash))
             {
+                Log.ForContext("SourceContext", "myProducts.Pages.Account.Login").Information
+                    ("Falha de login para o usuário: {Username}", Input.Username);
+
                 ModelState.AddModelError(string.Empty, "Usuário ou senha incorretos");
 
                 ModelState.Remove("Input.Username");
@@ -73,6 +73,9 @@ namespace myProducts.Pages.Account
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTime.UtcNow.AddDays(7)
             });
+
+            Log.ForContext("SourceContext", "myProducts.Pages.Account.Login").Information
+                ("Login bem-sucedido para o usuário: {UserId} - {Username}", user.UserId, user.Username);
 
             return RedirectToPage("/Home/Index");
         }

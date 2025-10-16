@@ -10,7 +10,7 @@ namespace myProducts.Models.ViewModels.Account
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if(User_email is not null && User_email.Contains("@"))
+            if (!(User_email is null || !User_email.Contains('@')))
             {
                 var pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
                 if (!Regex.IsMatch(User_email, pattern))

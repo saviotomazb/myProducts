@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using myProducts.Models;
 using myProducts.Services;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using Log = Serilog.Log;
 
 namespace myProducts.Pages.Account
 {
@@ -30,6 +27,7 @@ namespace myProducts.Pages.Account
 
             if (string.IsNullOrEmpty(refreshToken))
             {
+                Log.Warning("Refresh token ausente");
                 return new JsonResult(new { message = "Refresh token ausente" })
                 { StatusCode = 401 };
             }
@@ -40,6 +38,7 @@ namespace myProducts.Pages.Account
 
             if (oldSession == null)
             {
+                Log.Warning("Refresh token inválido ou expirado");
                 return new JsonResult(new { message = "Refresh token inválido ou expirado" })
                 { StatusCode = 401 };
             }

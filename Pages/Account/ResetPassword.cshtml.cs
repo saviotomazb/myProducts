@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using myProducts.Models;
 using myProducts.Models.ViewModels.Account;
 using myProducts.Services;
+using Log = Serilog.Log;
 
 namespace myProducts.Pages.Account
 {
@@ -24,28 +25,33 @@ namespace myProducts.Pages.Account
         {
             if (!ModelState.IsValid)
             {
+                Log.Warning("Tentativa de redefinição de senha com dados inválidos");
                 return Page();
             }
 
-            if (TempData["UserId"] == null)
+            int? userId = Convert.ToInt32(TempData["UserId"]);
+
+            if (userId == null)
             {
+                Log.Warning("Tentativa de redefinição de senha com UserId inválido");
                 TempData["Message"] = "Acesso inválido. Solicite um novo código.";
                 return RedirectToPage("/Account/ForgotPassword");
             }
 
             if(Input.Newpassword != Input.Confirmnewpassword)
             {
+                Log.ForContext("SourceContext", "myProducts.Pages.Account.ResetPassword").Information
+                    ("Senhas não coincidem para redefinição de senha do usuário: {UserId}", userId);
                 ModelState.AddModelError("Input.Confirmnewpassword", "As senhas não coincidem.");
                 return Page();
             }
-
-            int userId = Convert.ToInt32(TempData["UserId"]);
 
             var activeCode = await _db.PasswordResetCodes.Where
                 (c => c.UserId == userId && c.IsActive && c.Expiration > DateTime.UtcNow).OrderByDescending(c => c.Expiration).FirstOrDefaultAsync();
 
             if (activeCode == null)
             {
+                Log.Warning("Código de verificação expirado ou já utilizado para o usuário: {UserId}", userId);
                 TempData["Message"] = "O código de verificação expirou ou já foi utilizado.";
                 return RedirectToPage("/Account/ForgotPassword");
             }
@@ -54,6 +60,7 @@ namespace myProducts.Pages.Account
 
             if (user == null)
             {
+                Log.Error("Usuário não encontrado para UserId: {UserId}", userId);
                 TempData["Message"] = "Usuário não encontrado.";
                 return RedirectToPage("/Account/ForgotPassword");
             }
@@ -66,6 +73,7 @@ namespace myProducts.Pages.Account
 
             if (string.IsNullOrEmpty(Input.Newpassword))
             {
+                Log.Warning("Senha não informada para UserId: {UserId}", userId);
                 ModelState.AddModelError("Input.Newpassword", "Informe a nova senha.");
                 return Page();
             }
@@ -75,6 +83,9 @@ namespace myProducts.Pages.Account
             activeCode.IsActive = false;
 
             await _db.SaveChangesAsync();
+
+            Log.ForContext("SourceContext", "myProducts.Pages.Account.ResetPassword")
+               .Information("Senha redefinida com sucesso para o usuário: {UserId} - {Username}", user.UserId, user.Username);
 
             TempData["Message"] = "Senha redefinida com sucesso. Faça o login com a nova senha.";
 

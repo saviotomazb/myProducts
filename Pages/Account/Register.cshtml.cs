@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using myProducts.Models;
 using myProducts.Services;
-using System.Runtime.Intrinsics.Arm;
-using System.Security.Cryptography;
-using System.Text;
 using myProducts.Models.ViewModels.Account;
+using Log = Serilog.Log;
 
 namespace myProducts.Pages.Account
 {
@@ -30,24 +28,29 @@ namespace myProducts.Pages.Account
         {
             if(!ModelState.IsValid)
             {
+                Log.Warning("Tentativa de registro com dados inválidos: {Username}", Input.Username);
                 return Page();
             }
 
             if (await _db.Users.AnyAsync(u => u.Username == Input.Username))
             {
+                Log.ForContext("SourceContext", "myProducts.Pages.Account.Register").Information
+                    ("Tentativa de registro com nome de usuário já existente: {Username}", Input.Username);
                 ModelState.AddModelError("Input.Username", "Este nome de usuário já está em uso");
                 return Page();
             }
 
             if (await _db.Users.AnyAsync(u => u.Email == Input.Email))
             {
+                Log.ForContext("SourceContext", "myProducts.Pages.Account.Register").Information
+                    ("Tentativa de registro com e-mail já existente: {Email}", Input.Email);
                 ModelState.AddModelError("Input.Email", "Este e-mail já está cadastrado");
                 return Page();
             }
 
-            if (!IsPasswordValid(Input.Password))
+            if (!PasswordService.IsValid(Input.Password, out var error))
             {
-                ModelState.AddModelError("Input.Password", "A senha não atende aos critérios de segurança");
+                ModelState.AddModelError("Input.Password", error);
                 return Page();
             }
 
@@ -63,31 +66,13 @@ namespace myProducts.Pages.Account
                 IsActive = true
             };
 
-
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
 
+            Log.ForContext("SourceContext", "myProducts.Pages.Account.Register").Information
+                ("Novo usuário registrado: {UserId} - {Username}", user.UserId, user.Username);
+
             return RedirectToPage("/Account/Login");
-        }
-
-        static private bool IsPasswordValid(string password)
-        {
-            if (password.Length < 8)
-                return false;
-
-            if (!password.Any(char.IsUpper))
-                return false;
-
-            if (!password.Any(char.IsLower))
-                return false;
-
-            if (!password.Any(char.IsDigit))
-                return false;
-
-            if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
-                return false;
-
-            return true;
         }
     }
 }

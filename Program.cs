@@ -72,6 +72,8 @@ builder.Services.AddDbContext<MyproductsContext>(options => options.UseSqlServer
 
 builder.Services.AddScoped<UserSessionService>();
 
+var outputTemplate = "{Timestamp:dd-MM-yyyy HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}";
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
@@ -82,7 +84,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .Enrich.WithProperty("Application", "MyProducts")
 
-    .WriteTo.Console(restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
+    .WriteTo.Console(restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Debug, outputTemplate: outputTemplate)
 
     .Filter.ByExcluding(logEvent =>
     {
@@ -131,7 +133,7 @@ Log.Logger = new LoggerConfiguration()
                 ? scalar.Value?.ToString()
                 : src.ToString();
 
-            return !string.IsNullOrEmpty(source) && source.StartsWith("myProducts.Services");
+            return !string.IsNullOrEmpty(source) && (source.StartsWith("myProducts.Services") || source.StartsWith("myProducts.Pages"));
         }
         return false;
     })

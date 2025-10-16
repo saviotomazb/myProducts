@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using myProducts.Models;
 using myProducts.Models.ViewModels.Account;
+using Log = Serilog.Log;
 
 namespace myProducts.Pages.Account
 {
@@ -24,6 +25,7 @@ namespace myProducts.Pages.Account
 
             if (!forgotPasswordStarted)
             {
+                Log.Warning("Acesso inválido à página sem iniciar o processo de esqueceu a senha");
                 TempData["Message"] = "Acesso inválido. Solicite um código primeiro.";
                 return RedirectToPage("/Account/ForgotPassword");
             }
@@ -37,6 +39,7 @@ namespace myProducts.Pages.Account
         {
             if (!ModelState.IsValid)
             {
+                Log.Warning("Tentativa de verificação de código inválido");
                 return Page();
             }
 
@@ -44,12 +47,15 @@ namespace myProducts.Pages.Account
 
             if (code == null)
             {
+                Log.ForContext("SourceContext", "myProducts.Pages.Account.VerifyCode").Information
+                    ("Código inválido ou inexistente: {InputCode}", Input.Code);
                 ModelState.AddModelError("Input.Code", "Código inválido ou inexistente.");
                 return Page();
             }
 
             if (code.Expiration < DateTime.UtcNow)
             {
+                Log.Warning("Código expirado para o usuário: {UserId}", code.UserId);
                 ModelState.AddModelError("Input.Code", "O código expirou. Solicite um novo.");
                 code.IsActive = false;
                 await _db.SaveChangesAsync();
@@ -58,6 +64,9 @@ namespace myProducts.Pages.Account
 
             code.IsActive = false;
             await _db.SaveChangesAsync();
+
+            Log.ForContext("SourceContext", "myProducts.Pages.Account.VerifyCode").Information
+                ("Código validado com sucesso para o usuário: {UserId}. Código de verificação: {InputCode}", code.UserId, Input.Code);
 
             TempData["UserId"] = code.UserId;
             TempData["Message"] = "Código validado com sucesso. Defina sua nova senha";

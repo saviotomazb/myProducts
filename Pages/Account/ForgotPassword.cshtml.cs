@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using myProducts.Models;
 using myProducts.Models.ViewModels.Account;
 using myProducts.Services;
+using System.Security.Cryptography;
+using Log = Serilog.Log;
 
 namespace myProducts.Pages.Account
 {
@@ -29,6 +30,7 @@ namespace myProducts.Pages.Account
         {
             if (!ModelState.IsValid)
             {
+                Log.Warning("Tentativa de redefinição de senha com dados inválidos: {Input}", Input.User_email);
                 return Page();
             }
 
@@ -36,6 +38,9 @@ namespace myProducts.Pages.Account
 
             if (user == null)
             {
+                Log.ForContext("SourceContext", "myProducts.Pages.Account.ForgotPassword").Information
+                    ("Tentativa de redefinição de senha com dados inválidos: {Input}", Input.User_email);
+
                 ModelState.AddModelError(string.Empty, "Usuário ou e-mail não cadastrado");
 
                 ModelState.Remove("Input.User_email");
@@ -45,9 +50,25 @@ namespace myProducts.Pages.Account
                 return Page();
             }
 
-            var randomCode = new Random();
+            if (_db.PasswordResetCodes.Any(i => i.UserId == user.UserId && i.IsActive && i.Expiration > DateTime.UtcNow.AddMinutes(-15)))
+            {
+                ModelState.AddModelError("", "Já foi enviado um código recentemente para o seu e-mail, por favor verifique!");
+                return Page();
+            }
 
-            string code = randomCode.Next(10000, 99999).ToString();
+            var oldCode = await _db.PasswordResetCodes.Where(i => i.UserId == user.UserId && i.IsActive && i.Expiration <= DateTime.UtcNow).ToListAsync();
+
+            foreach (var i in oldCode)
+            {
+                i.IsActive = false;
+                Log.Debug("Código antigo desativado: {CodeId} para o usuário {UserId}", i.PasswordId, i.UserId);
+            }
+
+            await _db.SaveChangesAsync();
+
+            var bytes = RandomNumberGenerator.GetBytes(4);
+            int value = Math.Abs(BitConverter.ToInt32(bytes)) % 90000 + 10000;
+            string code = value.ToString();
 
             var passwordResetCode = new PasswordResetCode
             {
@@ -57,14 +78,24 @@ namespace myProducts.Pages.Account
                 IsActive = true
             };
 
+            Log.ForContext("SourceContext", "myProducts.Pages.Account.ForgotPassword").Information
+                ("Novo código de redefinição gerado para usuário {UserId}", user.UserId);
+
             _db.PasswordResetCodes.Add(passwordResetCode);
             await _db.SaveChangesAsync();
 
-            await EmailService.SendPasswordResetEmailAsync(user.Email, code);
-
-            TempData["Message"] = "Código de redefinição enviado para o seu e-mail";
-
-            TempData["ForgotPasswordStarted"] = true;
+            try
+            {
+                await EmailService.SendPasswordResetEmailAsync(user.Email, code);
+                TempData["Message"] = "Código de redefinição enviado para o seu e-mail";
+                Log.ForContext("SourceContext", "myProducts.Pages.Account.ForgotPassword").Information
+                    ("E-mail de redefinição enviado para {UserEmail}", user.Email);
+                TempData["ForgotPasswordStarted"] = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Falha ao enviar e-mail de redefinição para {UserEmail}", user.Email);
+            }
 
             return RedirectToPage("/Account/VerifyCode");
         }
