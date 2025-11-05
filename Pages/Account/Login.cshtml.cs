@@ -24,10 +24,6 @@ namespace myProducts.Pages.Account
         [BindProperty]
         public LoginViewModel Input { get; set; } = new LoginViewModel();
 
-        public void OnGet()
-        {
-        }
-
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)

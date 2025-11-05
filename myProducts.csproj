@@ -23,10 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\Home\" />
-    <Folder Include="Pages\Categories\" />
-    <Folder Include="Pages\Dashboard\" />
-    <Folder Include="Pages\Quotes\" />
-    <Folder Include="Pages\Products\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

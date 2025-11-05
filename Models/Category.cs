@@ -11,5 +11,9 @@ public partial class Category
 
     public bool IsActive { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime LastModified {  get; set; }
+
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }
