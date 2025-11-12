@@ -34,6 +34,7 @@ namespace myProducts.Pages.Account
 
             var refreshTokenHash = TokenService.ComputeHash(refreshToken);
 
+            //Verifica se o usuário possui alguma sessão antiga que ainda não foi revogada.
             var oldSession = await _db.UserSessions.Include(s => s.User).FirstOrDefaultAsync(s => s.RefreshTokenHash == refreshTokenHash && s.RevokedAt == null && s.ExpiresAt > DateTime.UtcNow);
 
             if (oldSession == null)
@@ -43,8 +44,10 @@ namespace myProducts.Pages.Account
                 { StatusCode = 401 };
             }
 
+            //Cria uma nova sessão e emite um novo refresh token (validade de 7 dias) e um novo JWT (validade de 1 hora).
             var newRefreshToken = await _userSessionService.CreateSessionAsync(oldSession.User, Request);
 
+            //Revoga a sessão anterior para evitar múltiplas sessões simultâneas com o mesmo refresh token.
             await _userSessionService.RevokeSessionAsync(oldSession);
 
             var jwtToken = TokenService.GenerateJwtToken(_configuration, oldSession.User.Username, oldSession.User.UserId, oldSession.User.FullName);

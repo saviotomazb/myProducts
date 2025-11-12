@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(options =>
 
         options.Events = new JwtBearerEvents
         {
-            //Realiza a leitura do token no cookie
+            //Realiza a leitura do token no cookie.
             OnMessageReceived = context =>
             {
                 var token = context.Request.Cookies["AuthToken"];
@@ -45,7 +45,7 @@ builder.Services.AddAuthentication(options =>
                 }
                 return Task.CompletedTask;
             },
-            //Evento disparado quando o usuário não possui um token válido (substituindo o evento padrão 401 unauthorized)
+            //Evento disparado quando o usuário não possui um token válido (substituindo o evento padrão 401 unauthorized).
             OnChallenge = context =>
             {
                 context.HandleResponse();
@@ -53,7 +53,7 @@ builder.Services.AddAuthentication(options =>
                 context.Response.Redirect("/Account/Login");
                 return Task.CompletedTask;
             },
-            //Esse evento dispara quando o usuário possui token válido, porém não tem permissão para acessar determinado recurso
+            //Esse evento dispara quando o usuário possui token válido, porém não tem permissão para acessar determinado recurso.
             OnForbidden = context =>
             {
                 context.Response.Redirect("/Account/Login");
@@ -74,8 +74,10 @@ builder.Services.AddDbContext<MyproductsContext>(options => options.UseSqlServer
 
 builder.Services.AddScoped<UserSessionService>();
 
+//Padrão de template definido para ser exibido no console.
 var outputTemplate = "{Timestamp:dd-MM-yyyy HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}";
 
+//Configurando o Serilog.
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
@@ -121,7 +123,7 @@ Log.Logger = new LoggerConfiguration()
         sinkOptions: new MSSqlServerSinkOptions
         {
             TableName = "LOGS",
-            AutoCreateSqlTable = false
+            AutoCreateSqlTable = false //Não cria a tabela automaticamente, pois a tabela já foi criada no BD.
         },
         restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning
     )

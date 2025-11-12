@@ -12,6 +12,8 @@ namespace myProducts.Services
 {
     public static class TokenService
     {
+
+        //Gera um JWT contendo as informações do usuário (claims) e assinado com chave simétrica (HMAC-SHA256).
         public static string GenerateJwtToken(IConfiguration configuration, string username, int userId, string fullName)
         {
             var jwtKey = configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key não foi configurada.");
@@ -39,6 +41,7 @@ namespace myProducts.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        //Gera um Refresh Token criptograficamente seguro (64 bytes aleatórios codificados em Base64).
         public static string GenerateRefreshToken()
         {
             var randomBytes = new byte[64];
@@ -48,6 +51,8 @@ namespace myProducts.Services
             return Convert.ToBase64String(randomBytes);
         }
 
+        // Calcula o hash SHA-256 de um refresh token para armazenamento seguro no banco.
+        // (Evita salvar o refresh token em texto puro, seguindo boas práticas de segurança).
         public static byte[] ComputeHash(string token)
         {
             using var sha256 = SHA256.Create();

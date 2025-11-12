@@ -15,6 +15,7 @@ namespace myProducts.Services
             _db = db;
         }
 
+        //Método que salva as informações de sessão (refresh token) do usuário via banco. 
         public async Task<string> CreateSessionAsync(User user, HttpRequest request)
         {
             var refreshToken = TokenService.GenerateRefreshToken();
@@ -39,6 +40,7 @@ namespace myProducts.Services
             return refreshToken;
         }
 
+        //Revoga a sessão existente do usuário, exemplo: após o logout.
         public async Task RevokeSessionAsync(UserSession session, UserSession? replacedBy = null)
         {
             session.RevokedAt = DateTime.UtcNow;

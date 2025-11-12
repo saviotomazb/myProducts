@@ -8,6 +8,7 @@ namespace myProducts.Services
     {
         public static async Task SendPasswordResetEmailAsync(string recipientEmail, string code)
         {
+            // Carrega as credenciais e configurações de SMTP a partir das variáveis de ambiente (evita expor dados sensíveis no código).
             string? _smtpHost = Environment.GetEnvironmentVariable("SMTP_HOST");
             string? _smtpPort = Environment.GetEnvironmentVariable("SMTP_PORT");
             string? _smtpUser = Environment.GetEnvironmentVariable("SMTP_USER");
@@ -35,6 +36,8 @@ namespace myProducts.Services
                 EnableSsl = true
             };
 
+
+            //Corpo do texto enviado por e-mail
             var mailMessage = new MailMessage()
             {
                 From = new MailAddress(_smtpUser, "MyProducts"),

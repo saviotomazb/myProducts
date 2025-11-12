@@ -19,6 +19,7 @@ namespace myProducts.Services
         [GeneratedRegex("[^A-Za-z0-9]")]
         private static partial Regex SpecialRegex();
 
+        //Valida a senha fornecida comparando-a com o hash armazenado (PBKDF2 + comparação em tempo constante).
         public static bool VerifyPassword(string password, byte[] storedPasswordHashWithSalt)
         {
             byte[] salt = new byte[16];
@@ -41,6 +42,7 @@ namespace myProducts.Services
             return result;
         }
 
+        //Gera o hash da senha usando PBKDF2 com salt aleatório (salt e hash são retornados juntos).
         public static byte[] HashPassword(string password)
         {
             byte[] salt = RandomNumberGenerator.GetBytes(16);
@@ -60,6 +62,7 @@ namespace myProducts.Services
             return passwordHashWithSalt;
         }
 
+        //Critérios para definir uma senha válida.
         public static bool IsValid(string? password, out string errorMessage)
         {
             errorMessage = string.Empty;

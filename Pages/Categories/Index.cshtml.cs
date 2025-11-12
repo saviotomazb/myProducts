@@ -49,6 +49,7 @@ namespace myProducts.Pages.Categories
                 query = query.Where(q => EF.Functions.Like(q.Name, $"%{SearchCategory}%"));
             }
 
+            // Calcula o total de páginas usando o tamanho definido para cada página (PageSize).
             var totalItems = await query.CountAsync();
             TotalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
 

@@ -80,6 +80,7 @@ namespace myProducts.Pages.Account
 
             user.PasswordHash = PasswordService.HashPassword(Input.Newpassword);
 
+            //Após a nova senha ser redefinida, o código gerado é desativado evitando múltiplos códigos.
             activeCode.IsActive = false;
 
             await _db.SaveChangesAsync();
@@ -96,6 +97,7 @@ namespace myProducts.Pages.Account
         {
             TempData.Remove("Message");
 
+            // Garante que a página só seja acessada a partir do fluxo correto (com UserId no TempData).
             if (TempData["UserId"] == null)
             {
                 TempData["Message"] = "Acesso inválido. Solicite um novo código.";

@@ -20,6 +20,7 @@ namespace myProducts.Pages.Categories
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
+            //Busca a categoria correspondente ao Id para preencher o formulário de edição.
             var category = await _db.Categories.FindAsync(id);
 
             if (category == null)

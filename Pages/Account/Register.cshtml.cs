@@ -54,6 +54,7 @@ namespace myProducts.Pages.Account
                 return Page();
             }
 
+            //Após os critérios definidos serem cumpridos, é gerado um hash da senha informada e atualizada.
             var passwordHashWithSalt = PasswordService.HashPassword(Input.Password);
 
             var user = new User
@@ -62,7 +63,7 @@ namespace myProducts.Pages.Account
                 Email = Input.Email,
                 FullName = Input.FullName,
                 PasswordHash = passwordHashWithSalt,
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
                 IsActive = true
             };
 

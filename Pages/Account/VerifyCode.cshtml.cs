@@ -21,6 +21,7 @@ namespace myProducts.Pages.Account
 
         public IActionResult OnGet()
         {
+            // Garante que esta página só seja acessada após iniciar o fluxo de recuperação de senha (ForgotPassword).
             bool forgotPasswordStarted = TempData["ForgotPasswordStarted"] as bool? ?? false;
 
             if (!forgotPasswordStarted)

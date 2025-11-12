@@ -34,6 +34,7 @@ namespace myProducts.Pages.Account
 
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == Input.Username);
 
+            //Valida se o usuário existe e se a senha fornecida corresponde ao hash armazenado.
             if (user == null || !PasswordService.VerifyPassword(Input.Password, user.PasswordHash))
             {
                 Log.ForContext("SourceContext", "myProducts.Pages.Account.Login").Information
@@ -41,6 +42,7 @@ namespace myProducts.Pages.Account
 
                 ModelState.AddModelError(string.Empty, "Usuário ou senha incorretos");
 
+                //Limpa os campos para que não fique nenhum input preenchido ao recarregar a página.
                 ModelState.Remove("Input.Username");
                 ModelState.Remove("Input.Password");
 
@@ -50,6 +52,7 @@ namespace myProducts.Pages.Account
                 return Page();
             }
 
+            //Gera um token JWT que será utilizado para autenticação nas requisições subsequentes.
             var tokenString = TokenService.GenerateJwtToken(_configuration, user.Username, user.UserId, user.FullName);
 
             Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
@@ -60,6 +63,7 @@ namespace myProducts.Pages.Account
                 Expires = DateTime.UtcNow.AddHours(1)
             });
 
+            //Para que o usuário não precise ficar refazendo o login a cada uma hora, é gerado o refresh token para que dure por 7 dias.
             var refreshToken = await _userSessionService.CreateSessionAsync(user, Request);
 
             Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
