@@ -15,6 +15,10 @@ public partial class Product
 
     public bool IsActive { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime LastModified {  get; set; }
+
     public virtual Category Category { get; set; } = null!;
 
     public virtual ICollection<Quoteitem> Quoteitems { get; set; } = new List<Quoteitem>();

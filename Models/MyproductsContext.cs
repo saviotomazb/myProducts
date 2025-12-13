@@ -104,6 +104,16 @@ public partial class MyproductsContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(150)
                 .IsUnicode(false);
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("CreatedAt")
+                .HasColumnType("datetime2(7)")
+                .HasDefaultValueSql("SYSUTCDATETIME()")
+                .IsRequired();
+            entity.Property(e => e.LastModified)
+                .HasColumnName("LastModified")
+                .HasColumnType("datetime2(7)")
+                .HasDefaultValueSql("SYSUTCDATETIME()")
+                .IsRequired();
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
