@@ -18,12 +18,22 @@
         </div>
         <form method="post" class="shadow bg-white rounded-lg p-6">
             <input type="hidden" asp-for="ProductVM.ProductId" />
+            
             <span asp-validation-for="ProductVM.Name" class="block w-full text-red-600 text-xs text-center sm:text-left mb-2"></span>
             <div class="flex flex-col items-center sm:flex-row sm:space-x-4">
-                <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Nome do produto:</label>
-                <input type="text" asp-for="ProductVM.Name" placeholder="Insira o nome que deseja salvar"
-                       class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" />
+                <label class="sm:w-32 whitespace-nowrap text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Nome do produto:</label>
+            
+                <div class="flex w-full flex-col sm:flex-row items-center sm:space-x-4 space-y-2 sm:space-y-0">
+                    <input type="text" asp-for="ProductVM.Name" placeholder="Insira o nome que deseja salvar"
+                           class="w-full sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" />
+
+                    <div class="hidden sm:flex items-center space-x-2 ml-4 whitespace-nowrap sm:ml-auto">
+                        <label class="text-sm font-medium text-gray-500">Ativo?</label>
+                        <input asp-for="ProductVM.IsActive" type="checkbox" id="isActiveDesktop" class="h-4 w-4 border-gray-300" />
+                    </div>
+                </div>
             </div>
+            
             <span asp-validation-for="ProductVM.Description" class="block w-full text-red-600 text-xs text-center sm:text-left mb-2"></span>
             <div class="flex flex-col items-center sm:flex-row sm:space-x-4">
                 <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0">Descrição:</label>
@@ -33,10 +43,19 @@
             <span asp-validation-for="ProductVM.CategoryId" class="block w-full text-red-600 text-xs text-center sm:text-left mb-2"></span>
             <div class="flex flex-col items-center sm:flex-row sm:space-x-4 sm:mb-4 mb-0">
                 <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Categoria:</label>
-                <select asp-for="ProductVM.CategoryId" asp-items="Model.ProductsList"
+                <select asp-for="ProductVM.CategoryId" asp-items="Model.CategoriesList"
                         class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input">
-                    <option value="">Selecione</option>
+                    <option value="" disabled>Selecione</option>
                 </select>
+            </div>
+
+            <div class="sm:hidden flex justify-center mt-4">
+                <label class="inline-flex items-center space-x-2 text-sm font-medium text-gray-600">
+                    <input type="checkbox"
+                           id="isActiveMobile"
+                           class="h-4 w-4 border-gray-300" />
+                    <span>Ativo?</span>
+                </label>
             </div>
 
             <div class="text-sm text-gray-500 space-y-1 mt-4 text-center sm:text-left mx-auto sm:mx-0">
@@ -50,3 +69,21 @@
         </form>
     </div>
 </div>
+
+<script>
+    // Sincroniza o estado do checkbox entre desktop e mobile
+    document.addEventListener('DOMContentLoaded', function () {
+        const isActiveDesktop = document.getElementById('isActiveDesktop');
+        const isActiveMobile = document.getElementById('isActiveMobile');
+        // Inicializa o estado do checkbox mobile com base no desktop
+        isActiveMobile.checked = isActiveDesktop.checked;
+        // Atualiza o checkbox desktop quando o mobile é alterado
+        isActiveMobile.addEventListener('change', function () {
+            isActiveDesktop.checked = isActiveMobile.checked;
+        });
+        // Atualiza o checkbox mobile quando o desktop é alterado
+        isActiveDesktop.addEventListener('change', function () {
+            isActiveMobile.checked = isActiveDesktop.checked;
+        });
+    });
+</script>

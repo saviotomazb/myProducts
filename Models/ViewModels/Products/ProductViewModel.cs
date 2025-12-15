@@ -7,6 +7,7 @@ namespace myProducts.Models.ViewModels.Products
     {
         public int ProductId { get; set; }
 
+        [Required(ErrorMessage = "Selecione uma categoria")]
         public int CategoryId { get; set; }
 
         public string CategoryName { get; set; } = string.Empty;

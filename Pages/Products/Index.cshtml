@@ -39,7 +39,7 @@
                 <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Categoria:</label>
                 <select asp-for="Input.CategoryId" asp-items="Model.CategoriesList" 
                 class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input">
-                    <option value="">Selecione</option>
+                    <option value="" disabled>Selecione</option>
                 </select>
             </div>
             <div class="flex flex-col items-center sm:flex-row mt-2 sm:mt-0">
@@ -71,7 +71,7 @@
                                 <th class="px-3 sm:px-6 py-4">Data da criação</th>
                                 <th class="px-3 sm:px-6 py-4">Data da última modificação</th>
                                 <th class="px-3 sm:px-6 py-4">Ações</th>
-                                <th class="px-3 sm:px-6 py-4">Ativa?</th>
+                                <th class="px-3 sm:px-6 py-4">Ativo?</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-300">

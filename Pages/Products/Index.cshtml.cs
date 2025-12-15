@@ -115,7 +115,7 @@ namespace myProducts.Pages.Products
                 Name = Input.Name,
                 Description = Input.Description,
                 CategoryId = Input.CategoryId,
-                IsActive = Input.IsActive,
+                IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 LastModified = DateTime.UtcNow
             };
