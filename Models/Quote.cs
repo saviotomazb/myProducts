@@ -16,6 +16,8 @@ public partial class Quote
     public DateTime CreatedAt { get; set; }
 
     public string Status { get; set; } = null!;
+    public DateTime ValidUntil { get; set; }
+    public string? Notes { get; set; }
 
     public virtual Client Client { get; set; } = null!;
 

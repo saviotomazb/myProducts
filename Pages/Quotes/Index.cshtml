@@ -4,3 +4,51 @@
     Layout = "~/Pages/Shared/App/_MainLayout.cshtml";
     ViewData["Title"] = "Orçamentos";
 }
+
+<div class="pt-16 sm:pt-20 lg:pt-24 px-4 sm:px-6 lg:px-8">
+    <div class="pt-8 sm:pt-12 lg:pt-16 pb-8 sm:pb-12 lg:pb-16">
+
+        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+                <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Novo orçamento</h1>
+                <p>Preencha os dados abaixo para criar um novo orçamento.</p>
+            </div>
+            <button class="h-fit shrink-0 text-white p-2 px-6 rounded-lg transition bg-green-500 hover:bg-green-600 cursor-pointer">Consultar orçamentos</button>
+        </div>
+        
+        <form method="post" class="shadow bg-white rounded-lg mt-6 p-6">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="mb-4 mt-2 text-green-600 text-xs text-center sm:text-left" id="success-message">@TempData["SuccessMessage"]</div>
+                }
+                <section class="border-b pb-6 mb-6">
+                <div class="mb-4 font-bold text-gray-700 text-sm">
+                        <span>Pedido:<span></span></span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cliente:</label>
+                            <input type="text" class=" w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" placeholder="Selecione ou informe o cliente" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Responsável:</label>
+                            <input type="text" class="w-full p-2 rounded-lg border border-gray-300 bg-gray-100 text-gray-400 text-sm cursor-not-allowed focus:ring login__input" value="Usuário logado" disabled />
+                        </div>
+                    </div>
+                </section>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const msg = document.getElementById('success-message');
+        if (msg) {
+            setTimeout(() => {
+                msg.classList.add('opacity-0');
+                setTimeout(() => msg.remove(), 500);
+
+            }, 4000);
+        }
+    });
+</script>

@@ -127,10 +127,10 @@ public partial class MyproductsContext : DbContext
 
             entity.ToTable("QUOTES");
 
-            entity.Property(e => e.Status)
-                .HasMaxLength(20)
-                .IsUnicode(false);
+            entity.Property(e => e.Status).HasMaxLength(20).IsUnicode(false).IsRequired();
             entity.Property(e => e.TotalAmount).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.ValidUntil).HasColumnType("datetime2(7)").IsRequired();
+            entity.Property(e => e.Notes).HasMaxLength(500).IsUnicode(true);
 
             entity.HasOne(d => d.Client).WithMany(p => p.Quotes)
                 .HasForeignKey(d => d.ClientId)
