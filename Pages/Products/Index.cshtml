@@ -13,8 +13,14 @@
                 pt-8 sm:pt-12 lg:pt-16
                 pb-8 sm:pb-12 lg:pb-16
                 ">
-        <div class="flex items-center justify-center mb-6">
+        @* <div class="flex items-center justify-center mb-6">
             <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold">Produtos</h1>
+        </div> *@
+        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+                <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Produtos</h1>
+                <p>Preencha os dados abaixo para cadastrar um novo produto.</p>
+            </div>
         </div>
         <form method="post" class="shadow bg-white rounded-lg mb-12 p-6">
             <h2 class="text-lg font-semibold mb-4 text-center sm:text-left">Cadastrar novo produto</h2>
@@ -43,7 +49,7 @@
                 </select>
             </div>
             <div class="flex flex-col items-center sm:flex-row mt-2 sm:mt-0">
-                <button type="submit" class="text-white p-2 px-6 rounded-lg transition bg-green-500 hover:bg-green-600 cursor-pointer">Cadastrar</button>
+                <button type="submit" class="text-white p-2 px-6 rounded-lg transition bg-green-500 hover:bg-green-600 cursor-pointer">Cadastrar produto</button>
             </div>
         </form>
         <form method="get" class="shadow bg-white rounded-lg p-6">
