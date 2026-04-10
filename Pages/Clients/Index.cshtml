@@ -25,111 +25,99 @@
 
             <section class="space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
+                    <div class="flex flex-col">
+                        <span asp-validation-for="Input.FullName" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
                             Nome completo:
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Digite o nome completo do cliente" />
+                               placeholder="Digite o nome completo do cliente" 
+                               asp-for="Input.FullName" />
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
+                    <div class="flex flex-col">
+                        <span asp-validation-for="Input.PhoneNumber" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
                             Número de telefone:
                         </label>
                         <input type="text"
                                id="phone"
                                maxlength="15"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="(00) 00000-0000" />
+                               placeholder="(00) 00000-0000"
+                               asp-for="Input.PhoneNumber" />
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
+                    <div class="flex flex-col">
+                        <span asp-validation-for="Input.City" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
                             Cidade:
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Digite a cidade" />
+                               placeholder="Digite a cidade" 
+                               asp-for="Input.City" />
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
+                    <div class="flex flex-col">
+                        <span asp-validation-for="Input.State" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" asp-for="Input.State">
                             Estado
                         </label>
-                        <select class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input text-gray-400" id="state">
-                            <option value="" disabled selected>Selecione</option>
-                            <option value="AC">AC</option>
-                            <option value="AL">AL</option>
-                            <option value="AP">AP</option>
-                            <option value="AM">AM</option>
-                            <option value="BA">BA</option>
-                            <option value="CE">CE</option>
-                            <option value="DF">DF</option>
-                            <option value="ES">ES</option>
-                            <option value="GO">GO</option>
-                            <option value="MA">MA</option>
-                            <option value="MT">MT</option>
-                            <option value="MS">MS</option>
-                            <option value="MG">MG</option>
-                            <option value="PA">PA</option>
-                            <option value="PB">PB</option>
-                            <option value="PR">PR</option>
-                            <option value="PE">PE</option>
-                            <option value="PI">PI</option>
-                            <option value="RJ">RJ</option>
-                            <option value="RN">RN</option>
-                            <option value="RS">RS</option>
-                            <option value="RO">RO</option>
-                            <option value="RR">RR</option>
-                            <option value="SC">SC</option>
-                            <option value="SP">SP</option>
-                            <option value="SE">SE</option>
-                            <option value="TO">TO</option>
+                        <select class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input text-gray-400" id="state" asp-for="Input.State" asp-items="Model.States">
+                            
                         </select>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
+                    <div class="flex flex-col">
+                        <span asp-validation-for="Input.Street" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
                             Rua:
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Digite a rua" />
+                               placeholder="Digite a rua"
+                               asp-for="Input.Street" />
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
+                    <div class="flex flex-col">
+                        <span asp-validation-for="Input.HouseNumber" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
                             Número:
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Digite o número" />
+                               placeholder="Digite o número" 
+                               asp-for="Input.HouseNumber" />
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
+                    <div class="flex flex-col">
+                        <span asp-validation-for="Input.District" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
                             Bairro:
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Digite o bairro" />
+                               placeholder="Digite o bairro"
+                               asp-for="Input.District" />
                     </div>
 
-                    <div>
+                    <div class="flex flex-col">
+                        <span asp-validation-for="Input.Complement" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Complemento:
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Apartamento, bloco, referência..." />
+                               placeholder="Apartamento, bloco, referência..." 
+                               asp-for="Input.Complement" />
                     </div>
                 </div>
 
@@ -145,7 +133,8 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+
         const msg = document.getElementById('success-message');
         if (msg) {
             setTimeout(() => {
@@ -157,7 +146,8 @@
         const phoneInput = document.getElementById('phone');
 
         if (phoneInput) {
-            phoneInput.addEventListener('input', function(e) {
+
+            phoneInput.addEventListener('input', function (e) {
                 let value = e.target.value.replace(/\D/g, '');
 
                 if (value.length > 11) value = value.slice(0, 11);
@@ -174,20 +164,31 @@
 
                 e.target.value = value;
             });
+
+            phoneInput.addEventListener('blur', function () {
+                if (this.value.length < 14) {
+                    this.value = '';
+                }
+            });
         }
 
         const stateSelect = document.getElementById('state');
 
         if (stateSelect) {
-            stateSelect.addEventListener('change', function() {
-                if (this.value) {
-                    this.classList.remove('text-gray-400');
-                    this.classList.add('text-gray-700');
+
+            function updateStateColor() {
+                if (stateSelect.value) {
+                    stateSelect.classList.remove('text-gray-400');
+                    stateSelect.classList.add('text-gray-700');
                 } else {
-                    this.classList.remove('text-gray-700');
-                    this.classList.add('text-gray-400');
+                    stateSelect.classList.remove('text-gray-700');
+                    stateSelect.classList.add('text-gray-400');
                 }
-            });
+            }
+
+            stateSelect.addEventListener('change', updateStateColor);
+
+            updateStateColor();
         }
     });
 </script>
