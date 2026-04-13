@@ -49,7 +49,7 @@
                 </select>
             </div>
             <div class="flex flex-col items-center sm:flex-row mt-2 sm:mt-0">
-                <button type="submit" class="text-white p-2 px-6 rounded-lg transition bg-green-500 hover:bg-green-600 cursor-pointer">Cadastrar produto</button>
+                <button type="submit" class="text-white p-2 px-6 rounded-lg transition button--success">Cadastrar produto</button>
             </div>
         </form>
         <form method="get" class="shadow bg-white rounded-lg p-6">
@@ -89,8 +89,8 @@
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.CreatedAtFormatted</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.LastModifiedFormatted</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate space-x-2">
-                                        <a class="text-blue-500 hover:text-blue-700 cursor-pointer" asp-page="/Products/Edit" asp-route-id="@i.ProductId">Editar</a>
-                                        <a class="text-blue-500 hover:text-blue-700 cursor-pointer">Excluir</a>
+                                        <a class="link--primary" asp-page="/Products/Edit" asp-route-id="@i.ProductId">Editar</a>
+                                        <a class="link--danger">Excluir</a>
                                     </td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.IsActiveFormatted</td>
                                 </tr>

@@ -16,6 +16,7 @@ namespace myProducts.Pages.Clients
 
         public void OnGet()
         {
+            Input = new ClientViewModel();
             LoadStates();
         }
 
@@ -24,7 +25,10 @@ namespace myProducts.Pages.Clients
             LoadStates();
 
             if (!ModelState.IsValid)
+            {
+                Input.State = string.IsNullOrWhiteSpace(Input.State) ? "" : Input.State;
                 return Page();
+            }
 
             var cleanPhone = string.IsNullOrWhiteSpace(Input.PhoneNumber)
             ? null
@@ -67,7 +71,7 @@ namespace myProducts.Pages.Clients
         {
             States = new List<SelectListItem>
             {
-                new() { Value = "", Text = "Selecione", Disabled = true },
+                new() { Value = "", Text = "Selecione" },
                 new() { Value = "AC", Text = "AC" },
                 new() { Value = "AL", Text = "AL" },
                 new() { Value = "AP", Text = "AP" },

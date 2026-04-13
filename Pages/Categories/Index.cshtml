@@ -29,7 +29,7 @@
             <div class="flex flex-col items-center sm:flex-row sm:space-x-4">
                 <label for="Nome" class="text-sm font-medium text-gray-700 mb-2 sm:mb-0 sm:mr-2 after:content-['*'] after:ml-1 after:text-red-500">Nome da categoria:</label>
                 <input type="text" asp-for="Input.Name" placeholder="Insira o nome que deseja cadastrar" class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input mb-2 sm:mb-0" />
-                <button type="submit" class="text-white p-2 px-6 rounded-lg transition bg-green-500 hover:bg-green-600 cursor-pointer">Cadastrar categoria</button>
+                <button type="submit" class="text-white p-2 px-6 rounded-lg transition button--success">Cadastrar categoria</button>
             </div>
         </form>
         <form method="get" class="shadow bg-white rounded-lg p-6">
@@ -67,8 +67,8 @@
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.CreatedAtFormatted</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.LastModifiedFormatted</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate space-x-2">
-                                        <a class="text-blue-500 hover:text-blue-700 cursor-pointer" asp-page="/Categories/Edit" asp-route-id="@i.Id">Editar</a>
-                                        <a class="text-blue-500 hover:text-blue-700 cursor-pointer">Excluir</a>
+                                        <a class="link--primary" asp-page="/Categories/Edit" asp-route-id="@i.Id">Editar</a>
+                                        <a class="link--danger">Excluir</a>
                                     </td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.IsActiveFormatted</td>
                                 </tr>

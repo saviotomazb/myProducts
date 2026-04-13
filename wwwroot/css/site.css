@@ -1,8 +1,12 @@
 ﻿:root {
     --blue-gradient: linear-gradient(to top, #0056FF, #2E74FF);
-    --blue-bottom: #2E74FF;
-    --blue-hover: #0056FF;
+    --blue-link: #3B82F6;
+    --blue-link-hover: #1D4ED8;
     --gray-login: #6B7280;
+    --red-link: #ef4444;
+    --red-link-hover: #dc2626;
+    --green-button: #22c55e;
+    --green-button-hover: #16a34a;
 }
 
 .login__background {
@@ -10,21 +14,48 @@
 }
 
 .button--primary {
-    background: var(--blue-bottom);
+    background: var(--blue-link);
     cursor: pointer;
 }
 
 .button--primary:hover {
-    background-color: var(--blue-hover);
+   background-color: var(--blue-link-hover);
+}
+
+.button--success {
+    background-color: var(--green-button);
+    cursor: pointer;
+}
+
+.button--success:hover {
+    background-color: var(--green-button-hover);
 }
 
 .link__navbar:hover {
-    color: var(--blue-bottom);
+    color: var(--blue-link-hover);
+}
+
+.link--primary {
+    color: var(--blue-link);
+    cursor: pointer;
+}
+
+.link--primary:hover {
+    color: var(--blue-link-hover);
 }
 
 .link-secondary {
     font-weight: 600;
-    color: var(--blue-bottom);
+    color: var(--blue-link);
+}
+
+.link--danger {
+    color: var(--red-link);
+    cursor: pointer;
+}
+
+.link--danger:hover {
+    color: var(--red-link-hover);
 }
 
 .login__footer{
@@ -33,7 +64,7 @@
 
 .login__input:focus {
     outline: none;
-    border-color: var(--blue-bottom);
+    border-color: var(--blue-link);
     border-width: 1px;
 }
 
