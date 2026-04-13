@@ -16,7 +16,15 @@
         <div class="flex items-center justify-center mb-6">
             <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold">Editar categoria</h1>
         </div>
-        <form method="post" class="shadow bg-white rounded-lg p-6">
+
+        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+                <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Editar categoria</h1>
+                <p>Edite e atualize os dados da categoria selecionada.</p>
+            </div>
+        </div>
+
+        <form method="post" class="shadow bg-white rounded-lg mt-6 p-6">
             <input type="hidden" asp-for="CategoryVM.Id" />
             <div class="flex flex-col items-center sm:flex-row sm:items-center sm:space-x-4 w-full">
                 <div class="flex flex-col w-full">

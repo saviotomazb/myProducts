@@ -35,7 +35,7 @@
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Digite o nome completo do cliente" 
+                               placeholder="Digite o nome completo do cliente"
                                asp-for="Input.FullName" />
                     </div>
 
@@ -61,7 +61,7 @@
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Digite a cidade" 
+                               placeholder="Digite a cidade"
                                asp-for="Input.City" />
                     </div>
 
@@ -72,7 +72,6 @@
                         </label>
                         <select class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input
                             @(string.IsNullOrEmpty(Model.Input?.State) ? "text-gray-400" : "text-gray-700")" id="state" asp-for="Input.State" asp-items="Model.States">
-                            
                         </select>
                     </div>
                 </div>
@@ -96,7 +95,7 @@
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Digite o número" 
+                               placeholder="Digite o número"
                                asp-for="Input.HouseNumber" />
                     </div>
                 </div>
@@ -120,7 +119,7 @@
                         </label>
                         <input type="text"
                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                               placeholder="Apartamento, bloco, referência..." 
+                               placeholder="Apartamento, bloco, referência..."
                                asp-for="Input.Complement" />
                     </div>
                 </div>

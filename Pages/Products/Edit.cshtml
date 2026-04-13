@@ -13,10 +13,15 @@
                 pt-8 sm:pt-12 lg:pt-16
                 pb-8 sm:pb-12 lg:pb-16
                 ">
-        <div class="flex items-center justify-center mb-6">
-            <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold">Editar produto</h1>
+
+        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+                <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Editar produto</h1>
+                <p>Edite e atualize os dados do produto selecionado.</p>
+            </div>
         </div>
-        <form method="post" class="shadow bg-white rounded-lg p-6">
+
+        <form method="post" class="shadow bg-white rounded-lg mt-6 p-6">
             <input type="hidden" asp-for="ProductVM.ProductId" />
             
             <span asp-validation-for="ProductVM.Name" class="block w-full text-red-600 text-xs text-center sm:text-left mb-2"></span>

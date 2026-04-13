@@ -1,0 +1,243 @@
+﻿@page "{id:int?}"
+@model myProducts.Pages.Clients.EditModel
+@{
+    Layout = "~/Pages/Shared/App/_MainLayout.cshtml";
+    ViewData["Title"] = "Editar cliente";
+}
+
+<div class="
+            pt-16 sm:pt-20 lg:pt-24
+            px-4 sm:px-6 lg:px-8
+            ">
+    <div class="
+                pt-8 sm:pt-12 lg:pt-16
+                pb-8 sm:pb-12 lg:pb-16
+                ">
+
+        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+                <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Editar cliente</h1>
+                <p>Edite e atualize os dados do cliente selecionado.</p>
+            </div>
+        </div>
+
+        <form method="post" class="shadow bg-white rounded-lg mt-6 p-6">
+            <input type="hidden" asp-for="ClientVM.ClientId" />
+
+            <section class="space-y-4">
+
+                <div class="flex flex-col">
+
+                    <div class="flex flex-col gap-4 sm:grid sm:grid-cols-[2fr_1fr_auto] sm:items-end">
+
+                        <div class="flex flex-col">
+                            <span asp-validation-for="ClientVM.FullName" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
+
+                            <label class="text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
+                                Nome completo:
+                            </label>
+
+                            <input asp-for="ClientVM.FullName"
+                                   class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                                   placeholder="Digite o nome completo do cliente" />
+                        </div>
+
+                        <div class="flex flex-col">
+                            <span asp-validation-for="ClientVM.PhoneNumber" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
+
+                            <label class="text-sm font-medium text-gray-700 mb-1">
+                                Telefone:
+                            </label>
+
+                            <input asp-for="ClientVM.PhoneNumber"
+                                   id="phone"
+                                   maxlength="15"
+                                   class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                                   placeholder="(00) 00000-0000" />
+                        </div>
+
+                        <div class="hidden sm:flex items-center space-x-2 mb-2">
+                            <label class="text-sm font-medium text-gray-500 whitespace-nowrap">
+                                Ativo?
+                            </label>
+
+                            <input asp-for="ClientVM.IsActive"
+                                   type="checkbox"
+                                   id="isActiveDesktop"
+                                   class="h-4 w-4 border-gray-300" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-4">
+
+                    <div class="flex flex-col">
+                        <span asp-validation-for="ClientVM.City" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Cidade:
+                        </label>
+                        <input asp-for="ClientVM.City"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               placeholder="Digite a cidade" />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span asp-validation-for="ClientVM.State" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Estado
+                        </label>
+                        <select asp-for="ClientVM.State"
+                                asp-items="Model.States"
+                                id="state"
+                                class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input
+                            @(string.IsNullOrEmpty(Model.ClientVM?.State) ? "text-gray-400" : "text-gray-700")">
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-4">
+
+                    <div class="flex flex-col">
+                        <span asp-validation-for="ClientVM.Street" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Rua:
+                        </label>
+                        <input asp-for="ClientVM.Street"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               placeholder="Digite a rua" />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span asp-validation-for="ClientVM.HouseNumber" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Número:
+                        </label>
+                        <input asp-for="ClientVM.HouseNumber"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               placeholder="Digite o número" />
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    <div class="flex flex-col">
+                        <span asp-validation-for="ClientVM.District" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Bairro:
+                        </label>
+                        <input asp-for="ClientVM.District"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               placeholder="Digite o bairro" />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span asp-validation-for="ClientVM.Complement" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Complemento:
+                        </label>
+                        <input asp-for="ClientVM.Complement"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               placeholder="Apartamento, bloco, referência..." />
+                    </div>
+
+                </div>
+
+                <div class="sm:hidden flex justify-center mt-4">
+                    <label class="inline-flex items-center space-x-2 text-sm font-medium text-gray-600">
+                        <input asp-for="ClientVM.IsActive"
+                               type="checkbox"
+                               id="isActiveMobile"
+                               class="h-4 w-4 border-gray-300" />
+                        <span>Ativo?</span>
+                    </label>
+                </div>
+
+                <div class="text-sm text-gray-500 mt-4 text-center sm:text-left">
+                    <p>Criado em: @Model.ClientVM.CreatedAtFormatted</p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center sm:space-x-4 mt-4">
+                    <button type="submit"
+                            class="text-white p-2 px-6 rounded-lg transition button--success">
+                        Salvar
+                    </button>
+
+                    <a asp-page="/Clients/List"
+                           class="text-xs link-secondary underline mt-2 sm:mt-0">
+                        Cancelar
+                    </a>
+                </div>
+
+            </section>
+        </form>
+     </div>
+</div>
+
+<script>
+    // Sincroniza o estado do checkbox entre desktop e mobile
+    document.addEventListener('DOMContentLoaded', function () {
+        const isActiveDesktop = document.getElementById('isActiveDesktop');
+        const isActiveMobile = document.getElementById('isActiveMobile');
+        // Inicializa o estado do checkbox mobile com base no desktop
+        isActiveMobile.checked = isActiveDesktop.checked;
+        // Atualiza o checkbox desktop quando o mobile é alterado
+        isActiveMobile.addEventListener('change', function () {
+            isActiveDesktop.checked = isActiveMobile.checked;
+        });
+        // Atualiza o checkbox mobile quando o desktop é alterado
+        isActiveDesktop.addEventListener('change', function () {
+            isActiveMobile.checked = isActiveDesktop.checked;
+        });
+
+        const phoneInput = document.getElementById('phone');
+
+        if (phoneInput) {
+
+            phoneInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+
+                if (value.length > 11) value = value.slice(0, 11);
+
+                if (value.length > 10) {
+                    value = value.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');
+                } else if (value.length > 6) {
+                    value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+                } else if (value.length > 2) {
+                    value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+                } else if (value.length > 0) {
+                    value = value.replace(/^(\d*)/, '($1');
+                }
+
+                e.target.value = value;
+            });
+
+            phoneInput.addEventListener('blur', function () {
+                if (this.value.length < 14) {
+                    this.value = '';
+                }
+            });
+        }
+
+        const stateSelect = document.getElementById('state');
+
+        if (stateSelect) {
+
+            function updateStateColor() {
+                if (stateSelect.value) {
+                    stateSelect.classList.remove('text-gray-400');
+                    stateSelect.classList.add('text-gray-700');
+                } else {
+                    stateSelect.classList.remove('text-gray-700');
+                    stateSelect.classList.add('text-gray-400');
+                }
+            }
+
+            stateSelect.addEventListener('change', updateStateColor);
+
+            updateStateColor();
+        }
+    });
+</script>
