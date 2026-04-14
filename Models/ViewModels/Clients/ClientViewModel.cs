@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using myProducts.Helpers;
 
 namespace myProducts.Models.ViewModels.Clients
 {
@@ -44,14 +45,7 @@ namespace myProducts.Models.ViewModels.Clients
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var validStates = new[]
-            {
-                "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA",
-                "MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN",
-                "RS","RO","RR","SC","SP","SE","TO"
-            };
-
-            if (!string.IsNullOrWhiteSpace(State) && !validStates.Contains(State.ToUpper()))
+            if (!StateHelper.IsValid(State))
             {
                 yield return new ValidationResult(
                     "Selecione um estado válido.",
