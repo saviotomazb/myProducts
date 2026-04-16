@@ -7,6 +7,7 @@ using myProducts.Models.ViewModels.Products;
 using myProducts.Models.ViewModels.Quotes;
 using System.Security.Claims;
 using System.Text.Json;
+using Log = Serilog.Log;
 
 namespace myProducts.Pages.Quotes
 {
@@ -65,7 +66,10 @@ namespace myProducts.Pages.Quotes
                 return Fail("Usuário não autenticado.");
 
             if (!int.TryParse(userIdClaim.Value, out var userId))
+            {
+                Log.Warning("Usuário inválido: {ClaimValue}", userIdClaim.Value);
                 return Fail("Usuário inválido.");
+            }
 
             if (!Input.ClientId.HasValue)
                 return Fail("Cliente é obrigatório.");
@@ -86,7 +90,15 @@ namespace myProducts.Pages.Quotes
                 .ToListAsync();
 
             if (products.Count != productIds.Count)
+            {
+                Log.Warning(
+                    "Inconsistência de produtos. Enviados: {SentCount}, Encontrados: {FoundCount}",
+                    productIds.Count,
+                    products.Count
+                );
+
                 return Fail("Um ou mais produtos são inválidos.");
+            }
 
             var productDict = products.ToDictionary(p => p.ProductId);
 
@@ -96,7 +108,10 @@ namespace myProducts.Pages.Quotes
             foreach (var item in items)
             {
                 if (item.ProductId <= 0)
+                {
+                    Log.Warning("Produto inválido recebido: {ProductId}", item.ProductId);
                     return Fail("Produto inválido.");
+                }
 
                 if (!productDict.TryGetValue(item.ProductId, out var product) || product == null)
                     return Fail("Produto não encontrado.");
@@ -148,11 +163,21 @@ namespace myProducts.Pages.Quotes
                 await _db.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+                Log.ForContext("SourceContext", "myProducts.Pages.Quotes.Index").Information(
+                    "Orçamento criado {QuoteId} para Cliente {ClientId} por Usuário {UserId} com Total {Total}",
+                    quote.QuoteId,
+                    quote.ClientId,
+                    quote.UserId,
+                    quote.TotalAmount
+                );
                 TempData["SuccessMessage"] = "Orçamento criado com sucesso!";
                 return RedirectToPage();
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error(ex, "Erro ao criar orçamento para Cliente {ClientId} pelo Usuário {UserId}",
+                    Input.ClientId,
+                    userId);
                 await transaction.RollbackAsync();
                 return Fail("Ocorreu um erro ao criar o orçamento.");
             }
