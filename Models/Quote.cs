@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace myProducts.Models;
 
@@ -7,6 +8,7 @@ public partial class Quote
 {
     public int QuoteId { get; set; }
 
+    [Required(ErrorMessage = "Cliente é obrigatório")]
     public int ClientId { get; set; }
 
     public int UserId { get; set; }

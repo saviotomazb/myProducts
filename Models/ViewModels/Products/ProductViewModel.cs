@@ -19,6 +19,10 @@ namespace myProducts.Models.ViewModels.Products
         [StringLength(500, ErrorMessage = "O campo de descrição deve ter no máximo 500 caracteres")]
         public string? Description { get; set; }
 
+        public decimal Price { get; set; }
+
+        public string PriceFormatted => Price.ToString("C", new CultureInfo("pt-BR"));
+
         public bool IsActive { get; set; }
 
         public string IsActiveFormatted => IsActive ? "Sim" : "Não";

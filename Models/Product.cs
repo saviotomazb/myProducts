@@ -14,6 +14,7 @@ public partial class Product
     public string? Description { get; set; }
 
     public bool IsActive { get; set; }
+    public decimal Price { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

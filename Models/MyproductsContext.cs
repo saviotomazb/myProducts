@@ -114,6 +114,10 @@ public partial class MyproductsContext : DbContext
                 .HasColumnType("datetime2(7)")
                 .HasDefaultValueSql("SYSUTCDATETIME()")
                 .IsRequired();
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(10, 2)")
+                .HasDefaultValue(0)
+                .IsRequired();
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
