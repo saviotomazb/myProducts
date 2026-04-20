@@ -24,6 +24,8 @@ namespace myProducts.Pages.Quotes
         public List<SelectListItem> Clients { get; set; } = new();
         public List<ProductViewModel> Products { get; set; } = new();
 
+        List<QuoteItemViewModel>? items;
+
         [BindProperty]
         public string ItemsJson { get; set; } = string.Empty;
 
@@ -49,7 +51,14 @@ namespace myProducts.Pages.Quotes
             if (string.IsNullOrWhiteSpace(ItemsJson))
                 return Fail("Nenhum item enviado.");
 
-            var items = JsonSerializer.Deserialize<List<QuoteItemViewModel>>(ItemsJson);
+            try
+            {
+                items = JsonSerializer.Deserialize<List<QuoteItemViewModel>>(ItemsJson);
+            }
+            catch
+            {
+                return Fail("Formato de itens inválido.");
+            }
 
             if (items == null || !items.Any())
                 return Fail("Adicione pelo menos um item.");
@@ -72,7 +81,10 @@ namespace myProducts.Pages.Quotes
             }
 
             if (!Input.ClientId.HasValue)
-                return Fail("Cliente é obrigatório.");
+            {
+                ModelState.AddModelError("Input.ClientId", "Cliente é obrigatório.");
+                return Page();
+            }
 
             var clientExists = await _db.Clients
                 .AnyAsync(c => c.ClientId == Input.ClientId.Value && c.IsActive);
@@ -81,7 +93,10 @@ namespace myProducts.Pages.Quotes
                 return Fail("Cliente inválido.");
 
             if (!Input.ValidUntil.HasValue || Input.ValidUntil.Value < DateTime.Today)
-                return Fail("Data de validade inválida.");
+            {
+                ModelState.AddModelError("Input.ValidUntil", "Data de validade inválida.");
+                return Page();
+            }
 
             var productIds = items.Select(i => i.ProductId).Distinct().ToList();
 
@@ -136,12 +151,15 @@ namespace myProducts.Pages.Quotes
                 quoteItems.Add(quoteItem);
             }
 
+            if (total <= 0)
+                return Fail("Total inválido.");
+
             var quote = new Quote
             {
                 ClientId = Input.ClientId.Value,
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
-                Status = "Pendente",
+                Status = QuoteStatus.Pendente,
                 ValidUntil = Input.ValidUntil.Value,
                 Notes = Input.Notes,
                 TotalAmount = total
@@ -215,5 +233,10 @@ namespace myProducts.Pages.Quotes
                 })
                 .ToListAsync();
         }
+    }
+
+    public static class QuoteStatus
+    {
+        public const string Pendente = "Pendente";
     }
 }

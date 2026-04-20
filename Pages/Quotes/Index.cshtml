@@ -14,10 +14,17 @@
                 <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Orçamentos</h1>
                 <p>Preencha os dados abaixo para cadastrar um novo orçamento.</p>
             </div>
-            <button class="h-fit shrink-0 text-white p-2 px-6 rounded-lg transition button--primary">Consultar orçamentos</button>
+            <a asp-page="/Quotes/List"
+                   class="h-fit shrink-0 text-white p-2 px-6 rounded-lg transition button--primary">
+                Consultar orçamentos
+            </a>
         </div>
         
         <form method="post" class="shadow bg-white rounded-lg mt-6 p-6">
+            <div id="form-message" class="mb-4 hidden"></div>
+                <div asp-validation-summary="ModelOnly"
+                     class="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm">
+                </div>
                 @if (TempData["SuccessMessage"] != null)
                 {
                     <div class="mb-4 mt-2 text-green-600 text-xs text-center sm:text-left" id="success-message">@TempData["SuccessMessage"]</div>
@@ -30,7 +37,6 @@
                         <div>
                             <span asp-validation-for="Input.ClientId" class="text-red-500 text-xs"></span>
                             <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">Cliente:</label>
-                            @* <input type="text" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" placeholder="Selecione ou informe o cliente" /> *@
                             <select asp-for="Input.ClientId" asp-items="Model.Clients" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"></select>
                         </div>
                         <div>
@@ -46,8 +52,6 @@
                             <div class="flex-1">
                                 <span asp-validation-for="InputItem.ProductId" class="text-red-500 text-xs"></span>
                                 <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">Produto:</label>
-                                @* <input type="text" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
-                                placeholder="Selecione o produto"/> *@
                                 <select asp-for="InputItem.ProductId"
                                         id="productSelect"
                                         class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input">
@@ -73,7 +77,7 @@
                                 <span asp-validation-for="InputItem.UnitPrice" class="text-red-500 text-xs"></span>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Valor unitário:</label>
                                 <input type="text" class="w-full p-2 rounded-lg border border-gray-300 bg-gray-100 text-sm cursor-not-allowed focus:ring login__input" 
-                                disabled placeholder="R$0,00" id="unitPrice" asp-for="InputItem.UnitPrice"/>
+                                readonly placeholder="R$0,00" id="unitPrice"/>
                             </div>
                             <button type="button" class="mt-6 sm:mt-6 h-fit shrink-0 text-white p-2 px-6 rounded-lg transition button--primary" id="btnAddItem">Adicionar</button>
                             <input type="hidden" id="itemsJson" name="ItemsJson" />
@@ -93,24 +97,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="p-2">Produto exemplo</td>
-                                    <td class="text-center p-2">2</td>
-                                    <td class="text-right p-2">R$ 50,00</td>
-                                    <td class="text-right p-2 font-medium">R$ 100,00</td>
-                                    <td class="text-center p-2">
-                                    <button class="link--danger text-xs">
-                                            Remover
-                                        </button>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="flex justify-end mt-4">
                         <div class="text-right">
                             <p class="text-sm text-gray-600">Total</p>
-                            <p class="text-lg font-semibold">R$100,00</p>
+                            <p id="totalAmount" class="text-lg font-semibold">R$ 0,00</p>
                         </div>
                     </div>
                 </section>
@@ -118,13 +111,15 @@
                     <h2 class="text-sm font-semibold text-gray-700 mb-4">Finalização</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div>
+                            <span asp-validation-for="Input.ValidUntil" class="text-red-500 text-xs"></span>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Validade do orçamento:</label>
-                            <input type="date" class="w-full sm:w-60 p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" />
+                            <input type="date" class="w-full sm:w-60 p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" asp-for="Input.ValidUntil"/>
                         </div>
                     </div>
                     <div class="mb-4">
+                        <span asp-validation-for="Input.Notes" class="text-red-500 text-xs"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Observações:</label>
-                        <textarea rows="3" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input resize-none"></textarea>
+                        <textarea rows="3" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input resize-none" asp-for="Input.Notes"></textarea>
                     </div>
                     <div class="flex justify-center sm:justify-end">
                     <button type="submit" class="w-full sm:w-auto h-fit shrink-0 text-white p-2 px-6 rounded-lg transition button--success">Cadastrar orçamento</button>
@@ -134,95 +129,6 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const msg = document.getElementById('success-message');
-        if (msg) {
-            setTimeout(() => {
-                msg.classList.add('opacity-0');
-                setTimeout(() => msg.remove(), 500);
-
-            }, 4000);
-        }
-    });
-    document.getElementById("productSelect").addEventListener("change", function () {
-        const selected = this.options[this.selectedIndex];
-        const price = selected.getAttribute("data-price");
-
-        document.getElementById("unitPrice").value =
-            price ? `R$ ${Number(price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : "";
-    });
-        let items = [];
-
-    document.getElementById("btnAddItem").addEventListener("click", function () {
-
-        const productSelect = document.getElementById("productSelect");
-        const productId = productSelect.value;
-        const productText = productSelect.options[productSelect.selectedIndex].text;
-        const price = parseFloat(productSelect.options[productSelect.selectedIndex].dataset.price || 0);
-
-        const quantity = parseInt(document.querySelector("[name='InputItem.Quantity']").value || 0);
-
-        if (!productId || quantity <= 0) {
-            alert("Selecione produto e quantidade");
-            return;
-        }
-
-        const item = {
-            productId: parseInt(productId),
-            productName: productText,
-            quantity: quantity,
-            unitPrice: price,
-            subtotal: price * quantity
-        };
-
-        items.push(item);
-
-        renderItems();
-        updateTotal();
-        syncHiddenField();
-
-        // reset
-        productSelect.value = "";
-        document.querySelector("[name='InputItem.Quantity']").value = "";
-        document.getElementById("unitPrice").value = "";
-    });
-
-    function renderItems() {
-        const tbody = document.querySelector("table tbody");
-        tbody.innerHTML = "";
-
-        items.forEach((item, index) => {
-            tbody.innerHTML += `
-                <tr>
-                    <td class="p-2">${item.productName}</td>
-                    <td class="text-center p-2">${item.quantity}</td>
-                    <td class="text-right p-2">R$ ${item.unitPrice.toFixed(2)}</td>
-                    <td class="text-right p-2 font-medium">R$ ${item.subtotal.toFixed(2)}</td>
-                    <td class="text-center p-2">
-                        <button type="button" onclick="removeItem(${index})" class="link--danger text-xs">
-                            Remover
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    function removeItem(index) {
-        items.splice(index, 1);
-        renderItems();
-        updateTotal();
-        syncHiddenField();
-    }
-
-    function updateTotal() {
-        const total = items.reduce((sum, i) => sum + i.subtotal, 0);
-        document.querySelector(".text-lg.font-semibold").innerText =
-            "R$ " + total.toFixed(2);
-    }
-
-    function syncHiddenField() {
-        document.getElementById("itemsJson").value = JSON.stringify(items);
-    }
-</script>
+@section Scripts {
+    <script src="~/js/quotes/create.js" asp-append-version="true"></script>
+}
