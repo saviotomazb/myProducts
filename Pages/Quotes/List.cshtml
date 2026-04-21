@@ -1,0 +1,133 @@
+﻿@page
+@model myProducts.Pages.Quotes.ListModel
+@{
+    Layout = "~/Pages/Shared/App/_MainLayout.cshtml";
+    ViewData["Title"] = "Consultar Orçamentos";
+}
+
+<div class="pt-16 sm:pt-20 lg:pt-24 px-4 sm:px-6 lg:px-8">
+    <div class="pt-8 sm:pt-12 lg:pt-16 pb-8 sm:pb-12 lg:pb-16">
+
+        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+                <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Consultar Orçamentos</h1>
+                <p>Busque, visualize e edite os orçamentos cadastrados no sistema.</p>
+            </div>
+        </div>
+
+        <form method="get" class="shadow bg-white rounded-lg mt-6 p-6">
+            <div class="flex flex-col items-center sm:flex-row sm:space-x-4 mb-4">
+                <label class="text-sm font-medium text-gray-700 mb-2 sm:mb-0">
+                    Cliente:
+                </label>
+
+                <input type="text"
+                       asp-for="SearchClient"
+                       placeholder="Procure pelo cliente"
+                       class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" />
+
+                <button type="submit"
+                        class="text-white p-2 px-6 rounded-lg transition button--primary mt-2 sm:mt-0">
+                    Buscar
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                @if (!Model.Quotes.Any())
+                {
+                    <div class="flex justify-center items-center min-h-24">
+                        <p class="text-gray-500 text-xs">Nenhum orçamento encontrado.</p>
+                    </div>
+                }
+                else
+                {
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead class="bg-gray-100">
+                            <tr class="text-left font-medium text-gray-500 text-uppercase tracking-wider text-xs sm:text-sm">
+                                <th class="px-3 sm:px-6 py-4">Cliente</th>
+                                <th class="px-3 sm:px-6 py-4">Total</th>
+                                <th class="px-3 sm:px-6 py-4">Data de criação</th>
+                                <th class="px-3 sm:px-6 py-4">Status</th>
+                                <th class="px-3 sm:px-6 py-4">Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-white divide-y divide-gray-300">
+                            @foreach (var q in Model.Quotes)
+                            {
+                                <tr class="hover:bg-gray-100 text-left">
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">
+                                        @q.ClientName
+                                    </td>
+
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">
+                                        @q.TotalAmount.ToString("C", new System.Globalization.CultureInfo("pt-BR"))
+                                    </td>
+
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">
+                                        @q.CreatedAtFormatted
+                                    </td>
+
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">
+                                        <span class="px-2 py-1 rounded text-xs font-semibold
+                                            @(q.StatusFormatted == "Aprovado" ? "bg-green-100 text-green-700" :
+                                                                                            q.StatusFormatted == "Expirado" ? "bg-red-100 text-red-700" :
+                                                                                            "bg-yellow-100 text-yellow-700")">
+                                            @q.StatusFormatted
+                                        </span>
+                                    </td>
+
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap space-x-2">
+
+                                        @if (q.StatusFormatted == "Pendente")
+                                        {
+                                            <a class="link--primary"
+                                                   asp-page="/Quotes/Edit"
+                                                   asp-route-id="@q.QuoteId">
+                                                Editar
+                                            </a>
+
+                                            <a class="link--danger"
+                                                   asp-page="/Quotes/Delete"
+                                                   asp-route-id="@q.QuoteId">
+                                                Excluir
+                                            </a>
+                                        }
+
+                                        <a class="link--primary"
+                                               asp-page="/Quotes/Print"
+                                               asp-route-id="@q.QuoteId">
+                                            Imprimir
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="flex justify-center mt-4 space-x-2">
+
+                        <a class="px-4 py-2 bg-gray-200 rounded @(Model.PageNumber == 1 ? "opacity-50 pointer-events-none" : "")"
+                               href="?SearchClient=@Model.SearchClient&PageNumber=@(Model.PageNumber - 1)">
+                            Anterior
+                        </a>
+
+                        <span class="px-4 py-2 text-gray-500">
+                            Página @Model.PageNumber de @Model.TotalPages
+                        </span>
+
+                        <a class="px-4 py-2 bg-gray-200 rounded @(Model.PageNumber == Model.TotalPages ? "opacity-50 pointer-events-none" : "")"
+                               href="?SearchClient=@Model.SearchClient&PageNumber=@(Model.PageNumber + 1)">
+                            Próximo
+                        </a>
+
+                    </div>
+                }
+            </div>
+        </form>
+    </div>
+</div>
