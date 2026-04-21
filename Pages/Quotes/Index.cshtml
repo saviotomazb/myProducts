@@ -50,10 +50,8 @@
                     <h2 class="text-sm font-semibold text-gray-700 mb-4">Itens do orçamento</h2>
                         <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
                             <div class="flex-1">
-                                <span asp-validation-for="InputItem.ProductId" class="text-red-500 text-xs"></span>
                                 <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">Produto:</label>
-                                <select asp-for="InputItem.ProductId"
-                                        id="productSelect"
+                                <select id="productSelect"
                                         class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input">
 
                                     <option value="">Selecione</option>
@@ -61,26 +59,24 @@
                                     @foreach (var product in Model.Products)
                                     {
                                         <option value="@product.ProductId"
-                                                data-price="@product.Price">
+                                                data-price="@product.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)">
                                             @product.Name
                                         </option>
                                     }
                                 </select>
                             </div>
                             <div class="w-full sm:w-28">
-                                <span asp-validation-for="InputItem.Quantity" class="text-red-500 text-xs"></span>
                                 <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">Quantidade:</label>
-                                <input asp-for="InputItem.Quantity" type="number" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" id="quantityInput"
+                                <input type="number" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" id="quantityInput"
                                 min="1"/>
                             </div>
                             <div class="w-full sm:w-40">
-                                <span asp-validation-for="InputItem.UnitPrice" class="text-red-500 text-xs"></span>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Valor unitário:</label>
                                 <input type="text" class="w-full p-2 rounded-lg border border-gray-300 bg-gray-100 text-sm cursor-not-allowed focus:ring login__input" 
                                 readonly placeholder="R$0,00" id="unitPrice"/>
                             </div>
                             <button type="button" class="mt-6 sm:mt-6 h-fit shrink-0 text-white p-2 px-6 rounded-lg transition button--primary" id="btnAddItem">Adicionar</button>
-                            <input type="hidden" id="itemsJson" name="ItemsJson" />
+                            <input type="hidden" id="itemsJson" asp-for="ItemsJson" />
                         </div>
                 </section>
                 <section class="border-b border-gray-200 pb-6 mb-6">

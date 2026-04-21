@@ -10,12 +10,33 @@ let items = [];
 let isSubmitting = false;
 
 document.addEventListener('DOMContentLoaded', function () {
+    isSubmitting = false;
+
+    //Habilitar botão de cadastro novamente
+    const submitButton = document.querySelector("button[type='submit']");
+    if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.innerText = "Cadastrar orçamento";
+        submitButton.classList.remove("opacity-50", "cursor-not-allowed");
+    }
+
+    //Bloqueia Enter durante envio
+    const form = document.querySelector("form");
+    if (form) {
+        form.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" && isSubmitting) {
+                e.preventDefault();
+            }
+        });
+    }
+
     handleSuccessMessage();
     bindProductSelect();
     bindAddItem();
     bindFormSubmit();
     renderItems();
     updateTotal();
+    loadItemsFromHidden();
 });
 
 //Exibe mensagem de sucesso (TempData) e remove após alguns segundos
@@ -59,17 +80,29 @@ function addItem() {
     const productId = parseInt(productSelect.value, 10);
     const selectedOption = productSelect.options[productSelect.selectedIndex];
     const productText = selectedOption ? selectedOption.text : "";
-    const price = parseFloat(selectedOption?.dataset.price || 0);
+    const price = selectedOption && selectedOption.dataset.price
+        ? Number(selectedOption.dataset.price)
+        : 0;
 
-    const quantityInput = document.querySelector("[name='InputItem.Quantity']");
+    const quantityInput = document.getElementById("quantityInput");
     const quantity = parseInt(quantityInput.value || 0, 10);
+
+    if (!productSelect.value) {
+        showMessage("Selecione um produto", "warning");
+        return;
+    }
+
+    if (!selectedOption || !selectedOption.dataset.price) {
+        showMessage("Selecione um produto válido", "error");
+        return;
+    }
 
     if (!productId || quantity <= 0) {
         showMessage("Selecione produto e quantidade", "warning");
         return;
     }
 
-    if (price <= 0) {
+    if (!price || price <= 0) {
         showMessage("Produto inválido", "error");
         return;
     }
@@ -161,7 +194,7 @@ function resetForm() {
     productSelect.value = "";
     productSelect.dispatchEvent(new Event("change"));
 
-    document.querySelector("[name='InputItem.Quantity']").value = "";
+    document.getElementById("quantityInput").value = "";
     document.getElementById("unitPrice").value = "";
 }
 
@@ -211,15 +244,35 @@ function bindFormSubmit() {
 
     form.addEventListener("submit", function (e) {
 
-        if (isSubmitting) {
+        clearMessage();
+
+        const client = document.querySelector("[name='Input.ClientId']");
+        const validUntil = document.querySelector("[name='Input.ValidUntil']");
+
+        if (!client.value) {
             e.preventDefault();
+            showMessage("Selecione um cliente", "warning");
             return;
         }
 
-        if (items.length === 0) {
+        if (!validUntil.value) {
             e.preventDefault();
-            showMessage("Adicione pelo menos um item ao orçamento", "error");
-            isSubmitting = false;
+            showMessage("Informe a data de validade", "warning");
+            return;
+        }
+
+        syncHiddenField();
+
+        const hidden = document.getElementById("itemsJson");
+
+        if (!hidden.value || hidden.value === "[]") {
+            e.preventDefault();
+            showMessage("Adicione pelo menos um item", "error");
+            return;
+        }
+
+        if (isSubmitting) {
+            e.preventDefault();
             return;
         }
 
@@ -228,8 +281,25 @@ function bindFormSubmit() {
         const submitButton = form.querySelector("button[type='submit']");
         if (submitButton) {
             submitButton.disabled = true;
-            submitButton.classList.add("opacity-50", "cursor-not-allowed");
             submitButton.innerText = "Salvando...";
         }
     });
+}
+
+//Carrega os itens adicionados na tabela
+function loadItemsFromHidden() {
+    const hidden = document.getElementById("itemsJson");
+
+    if (!hidden || !hidden.value) return;
+
+    try {
+        items = JSON.parse(hidden.value);
+
+        renderItems();
+        updateTotal();
+        syncHiddenField();
+    } catch (e) {
+        showMessage("Erro ao carregar itens:", "error");
+        items = [];
+    }
 }

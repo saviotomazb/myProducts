@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,13 +19,9 @@ namespace myProducts.Pages.Quotes
         [BindProperty]
         public QuoteViewModel Input { get; set; } = new();
 
-        [BindProperty]
-        public QuoteItemViewModel InputItem { get; set; } = new();
-
         public List<SelectListItem> Clients { get; set; } = new();
-        public List<ProductViewModel> Products { get; set; } = new();
 
-        List<QuoteItemViewModel>? items;
+        public List<ProductViewModel> Products { get; set; } = new();
 
         [BindProperty]
         public string ItemsJson { get; set; } = string.Empty;
@@ -45,58 +42,24 @@ namespace myProducts.Pages.Quotes
             await LoadClientsAsync();
             await LoadProductsAsync();
 
-            if (!ModelState.IsValid)
-                return Page();
-
-            if (string.IsNullOrWhiteSpace(ItemsJson))
-                return Fail("Nenhum item enviado.");
-
-            try
-            {
-                items = JsonSerializer.Deserialize<List<QuoteItemViewModel>>(ItemsJson);
-            }
-            catch
-            {
-                return Fail("Formato de itens inválido.");
-            }
-
-            if (items == null || !items.Any())
-                return Fail("Adicione pelo menos um item.");
-
-            if (items.GroupBy(i => i.ProductId).Any(g => g.Count() > 1))
-                return Fail("Produto duplicado no orçamento.");
-
-            if (items.Count > 50)
-                return Fail("Limite de itens excedido.");
-
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
-            if (userIdClaim == null)
-                return Fail("Usuário não autenticado.");
-
-            if (!int.TryParse(userIdClaim.Value, out var userId))
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
             {
-                Log.Warning("Usuário inválido: {ClaimValue}", userIdClaim.Value);
-                return Fail("Usuário inválido.");
-            }
-
-            if (!Input.ClientId.HasValue)
-            {
-                ModelState.AddModelError("Input.ClientId", "Cliente é obrigatório.");
+                ModelState.AddModelError("", "Usuário não autenticado.");
                 return Page();
             }
 
-            var clientExists = await _db.Clients
-                .AnyAsync(c => c.ClientId == Input.ClientId.Value && c.IsActive);
+            ValidateForm();
+            var items = ValidateItems();
 
-            if (!clientExists)
-                return Fail("Cliente inválido.");
-
-            if (!Input.ValidUntil.HasValue || Input.ValidUntil.Value < DateTime.Today)
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Input.ValidUntil", "Data de validade inválida.");
                 return Page();
             }
+
+            if (items == null)
+                return Page();
 
             var productIds = items.Select(i => i.ProductId).Distinct().ToList();
 
@@ -106,13 +69,8 @@ namespace myProducts.Pages.Quotes
 
             if (products.Count != productIds.Count)
             {
-                Log.Warning(
-                    "Inconsistência de produtos. Enviados: {SentCount}, Encontrados: {FoundCount}",
-                    productIds.Count,
-                    products.Count
-                );
-
-                return Fail("Um ou mais produtos são inválidos.");
+                ModelState.AddModelError("", "Um ou mais produtos são inválidos.");
+                return Page();
             }
 
             var productDict = products.ToDictionary(p => p.ProductId);
@@ -122,45 +80,49 @@ namespace myProducts.Pages.Quotes
 
             foreach (var item in items)
             {
-                if (item.ProductId <= 0)
+                if (!productDict.TryGetValue(item.ProductId, out var product))
                 {
-                    Log.Warning("Produto inválido recebido: {ProductId}", item.ProductId);
-                    return Fail("Produto inválido.");
+                    ModelState.AddModelError("", "Produto inválido.");
+                    return Page();
                 }
 
-                if (!productDict.TryGetValue(item.ProductId, out var product) || product == null)
-                    return Fail("Produto não encontrado.");
-
                 if (item.Quantity is <= 0 or > 1000)
-                    return Fail("Quantidade inválida.");
-
-                if (product.Price <= 0)
-                    return Fail("Produto com preço inválido.");
+                {
+                    ModelState.AddModelError("", "Quantidade inválida.");
+                    return Page();
+                }
 
                 var subtotal = product.Price * item.Quantity;
 
-                var quoteItem = new Quoteitem
+                total += subtotal;
+
+                quoteItems.Add(new Quoteitem
                 {
                     ProductId = item.ProductId,
                     UnitPrice = product.Price,
                     Subtotal = subtotal,
                     Quantity = item.Quantity
-                };
-
-                total += subtotal;
-                quoteItems.Add(quoteItem);
+                });
             }
 
             if (total <= 0)
-                return Fail("Total inválido.");
+            {
+                ModelState.AddModelError("", "Total inválido.");
+                return Page();
+            }
+
+            if (Input.ClientId is not int clientId || Input.ValidUntil is not DateTime validUntil)
+            {
+                return Page();
+            }
 
             var quote = new Quote
             {
-                ClientId = Input.ClientId.Value,
+                ClientId = clientId,
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
                 Status = QuoteStatus.Pendente,
-                ValidUntil = Input.ValidUntil.Value,
+                ValidUntil = validUntil,
                 Notes = Input.Notes,
                 TotalAmount = total
             };
@@ -181,30 +143,20 @@ namespace myProducts.Pages.Quotes
                 await _db.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                Log.ForContext("SourceContext", "myProducts.Pages.Quotes.Index").Information(
-                    "Orçamento criado {QuoteId} para Cliente {ClientId} por Usuário {UserId} com Total {Total}",
-                    quote.QuoteId,
-                    quote.ClientId,
-                    quote.UserId,
-                    quote.TotalAmount
-                );
-                TempData["SuccessMessage"] = "Orçamento criado com sucesso!";
+                Log.ForContext("SourceContext", "myProducts.Pages.Quotes.Index").Information
+                    ("Orçamento cadastrado com sucesso: {QuoteId}", quote.QuoteId);
+
+                TempData["SuccessMessage"] = "Orçamento cadastrado com sucesso!";
                 return RedirectToPage();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Erro ao criar orçamento para Cliente {ClientId} pelo Usuário {UserId}",
-                    Input.ClientId,
-                    userId);
+                Log.ForContext("SourceContext", "myProducts.Pages.Quotes.Index").Error
+                    (ex, "Erro ao cadastrar orçamento");
                 await transaction.RollbackAsync();
-                return Fail("Ocorreu um erro ao criar o orçamento.");
+                ModelState.AddModelError("", "Erro ao salvar orçamento.");
+                return Page();
             }
-        }
-
-        private IActionResult Fail(string message)
-        {
-            ModelState.AddModelError("", message);
-            return Page();
         }
 
         private async Task LoadClientsAsync()
@@ -233,10 +185,66 @@ namespace myProducts.Pages.Quotes
                 })
                 .ToListAsync();
         }
-    }
+        public static class QuoteStatus
+        {
+            public const string Pendente = "Pendente";
+        }
 
-    public static class QuoteStatus
-    {
-        public const string Pendente = "Pendente";
+        private void ValidateForm()
+        {
+            if (!Input.ClientId.HasValue)
+                ModelState.AddModelError("Input.ClientId", "Cliente é obrigatório.");
+
+            if (!Input.ValidUntil.HasValue)
+                ModelState.AddModelError("Input.ValidUntil", "Data é obrigatória.");
+
+            else if (Input.ValidUntil.Value < DateTime.Today)
+                ModelState.AddModelError("Input.ValidUntil", "Data inválida.");
+        }
+
+        private List<QuoteItemViewModel>? ValidateItems()
+        {
+            if (string.IsNullOrWhiteSpace(ItemsJson))
+            {
+                ModelState.AddModelError("", "Adicione pelo menos um item.");
+                return null;
+            }
+
+            try
+            {
+                var items = JsonSerializer.Deserialize<List<QuoteItemViewModel>>(ItemsJson);
+
+                if (items == null || !items.Any())
+                {
+                    ModelState.AddModelError("", "Adicione pelo menos um item.");
+                    return null;
+                }
+
+                if (items.Any(i => i.Quantity <= 0))
+                {
+                    ModelState.AddModelError("", "Itens com quantidade inválida.");
+                    return null;
+                }
+
+                if (items.GroupBy(i => i.ProductId).Any(g => g.Count() > 1))
+                {
+                    ModelState.AddModelError("", "Produto duplicado.");
+                    return null;
+                }
+
+                if (items.Count > 50)
+                {
+                    ModelState.AddModelError("", "Limite de itens excedido.");
+                    return null;
+                }
+
+                return items;
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Itens inválidos.");
+                return null;
+            }
+        }
     }
 }
