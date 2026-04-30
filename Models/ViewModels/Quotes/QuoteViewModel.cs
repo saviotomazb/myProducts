@@ -8,6 +8,7 @@ namespace myProducts.Models.ViewModels.Quotes
         [Required(ErrorMessage = "Selecione um cliente.")]
         public int? ClientId { get; set; }
 
+        [Required(ErrorMessage = "Informe a data de validade.")]
         [DataType(DataType.Date)]
         public DateTime? ValidUntil { get; set; }
 

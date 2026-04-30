@@ -147,6 +147,7 @@ namespace myProducts.Pages.Quotes
                     ("Orçamento cadastrado com sucesso: {QuoteId}", quote.QuoteId);
 
                 TempData["SuccessMessage"] = "Orçamento cadastrado com sucesso!";
+                TempData["QuoteId"] = quote.QuoteId;
                 return RedirectToPage();
             }
             catch (Exception ex)
@@ -192,14 +193,10 @@ namespace myProducts.Pages.Quotes
 
         private void ValidateForm()
         {
-            if (!Input.ClientId.HasValue)
-                ModelState.AddModelError("Input.ClientId", "Cliente é obrigatório.");
-
-            if (!Input.ValidUntil.HasValue)
-                ModelState.AddModelError("Input.ValidUntil", "Data é obrigatória.");
-
-            else if (Input.ValidUntil.Value < DateTime.Today)
+            if (Input.ValidUntil is DateTime validUntil && validUntil < DateTime.Today)
+            {
                 ModelState.AddModelError("Input.ValidUntil", "Data inválida.");
+            }
         }
 
         private List<QuoteItemViewModel>? ValidateItems()

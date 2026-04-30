@@ -20,34 +20,39 @@
         </div>
 
         <form method="post" class="shadow bg-white rounded-lg mt-6 p-6">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-error">
+                    <div asp-validation-summary="All"></div>
+                </div>
+            }
 
             @if (TempData["SuccessMessage"] != null)
             {
-                <div class="mb-4 mt-2 text-green-600 text-xs text-center sm:text-left" id="success-message">@TempData["SuccessMessage"]</div>
+                <div id="success-message" class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
             }
-
             <section class="space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="flex flex-col">
-                        <span asp-validation-for="Input.FullName" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
                             Nome completo:
                         </label>
                         <input type="text"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.FullName")"
                                placeholder="Digite o nome completo do cliente"
                                asp-for="Input.FullName" />
                     </div>
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="Input.PhoneNumber" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Número de telefone:
                         </label>
                         <input type="text"
                                id="phone"
                                maxlength="15"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.PhoneNumber")"
                                placeholder="(00) 00000-0000"
                                asp-for="Input.PhoneNumber" />
                     </div>
@@ -55,22 +60,21 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-4">
                     <div class="flex flex-col">
-                        <span asp-validation-for="Input.City" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Cidade:
                         </label>
                         <input type="text"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.City")"
                                placeholder="Digite a cidade"
                                asp-for="Input.City" />
                     </div>
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="Input.State" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1" asp-for="Input.State">
                             Estado
                         </label>
                         <select class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input
+                            @InputErrorClass("Input.State")
                             @(string.IsNullOrEmpty(Model.Input?.State) ? "text-gray-400" : "text-gray-700")" id="state" asp-for="Input.State" asp-items="Model.States">
                         </select>
                     </div>
@@ -78,23 +82,21 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-4">
                     <div class="flex flex-col">
-                        <span asp-validation-for="Input.Street" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Rua:
                         </label>
                         <input type="text"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.Street")"
                                placeholder="Digite a rua"
                                asp-for="Input.Street" />
                     </div>
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="Input.HouseNumber" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Número:
                         </label>
                         <input type="text"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.HouseNumber")"
                                placeholder="Digite o número"
                                asp-for="Input.HouseNumber" />
                     </div>
@@ -102,23 +104,21 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="flex flex-col">
-                        <span asp-validation-for="Input.District" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Bairro:
                         </label>
                         <input type="text"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.District")"
                                placeholder="Digite o bairro"
                                asp-for="Input.District" />
                     </div>
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="Input.Complement" class="text-red-600 text-xs sm:text-left mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Complemento:
                         </label>
                         <input type="text"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.Complement")"
                                placeholder="Apartamento, bloco, referência..."
                                asp-for="Input.Complement" />
                     </div>
@@ -143,7 +143,7 @@
             setTimeout(() => {
                 msg.classList.add('opacity-0');
                 setTimeout(() => msg.remove(), 500);
-            }, 4000);
+            }, 3000);
         }
 
         const phoneInput = document.getElementById('phone');
@@ -195,3 +195,12 @@
         }
     });
 </script>
+
+@functions {
+    public string InputErrorClass(string key)
+    {
+        return ViewData.ModelState.TryGetValue(key, out var entry) && entry.Errors.Count > 0
+            ? "input-error"
+            : "";
+    }
+}

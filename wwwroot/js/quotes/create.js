@@ -37,17 +37,28 @@ document.addEventListener('DOMContentLoaded', function () {
     renderItems();
     updateTotal();
     loadItemsFromHidden();
+    bindFieldClear();
 });
 
 //Exibe mensagem de sucesso (TempData) e remove após alguns segundos
 function handleSuccessMessage() {
     const msg = document.getElementById('success-message');
+    const pedido = document.getElementById('pedido-id');
+
     if (!msg) return;
 
     setTimeout(() => {
         msg.classList.add('opacity-0');
-        setTimeout(() => msg.remove(), 500);
-    }, 4000);
+
+        setTimeout(() => {
+            msg.remove();
+        }, 500);
+
+        if (pedido) {
+            pedido.innerText = '';
+        }
+
+    }, 3000);
 }
 
 //Atualiza automaticamente o valor unitário ao selecionar um produto
@@ -88,8 +99,17 @@ function addItem() {
     const quantity = parseInt(quantityInput.value || 0, 10);
 
     if (!productSelect.value) {
-        showMessage("Selecione um produto", "warning");
+        setFieldError(productSelect, "Selecione um produto");
         return;
+    } else {
+        clearFieldError(productSelect);
+    }
+
+    if (!quantity || quantity <= 0) {
+        setFieldError(quantityInput, "Quantidade inválida");
+        return;
+    } else {
+        clearFieldError(quantityInput);
     }
 
     if (!selectedOption || !selectedOption.dataset.price) {
@@ -206,17 +226,17 @@ function showMessage(message, type = "error") {
     if (!container) return;
 
     const styles = {
-        error: "bg-red-50 text-red-600",
-        success: "bg-green-50 text-green-600",
-        warning: "bg-yellow-50 text-yellow-600"
+        error: "alert alert-error",
+        success: "alert alert-success",
+        warning: "alert alert-warning"
     };
 
-    container.className = "mb-4 p-3 rounded-lg text-sm";
+    container.className = "alert mb-4";
 
     container.classList.remove(
-        "bg-red-50", "text-red-600",
-        "bg-green-50", "text-green-600",
-        "bg-yellow-50", "text-yellow-600"
+        "alert-error",
+        "alert-success",
+        "alert-warning"
     );
 
     container.classList.add(...styles[type].split(" "));
@@ -245,21 +265,6 @@ function bindFormSubmit() {
     form.addEventListener("submit", function (e) {
 
         clearMessage();
-
-        const client = document.querySelector("[name='Input.ClientId']");
-        const validUntil = document.querySelector("[name='Input.ValidUntil']");
-
-        if (!client.value) {
-            e.preventDefault();
-            showMessage("Selecione um cliente", "warning");
-            return;
-        }
-
-        if (!validUntil.value) {
-            e.preventDefault();
-            showMessage("Informe a data de validade", "warning");
-            return;
-        }
 
         syncHiddenField();
 
@@ -302,4 +307,35 @@ function loadItemsFromHidden() {
         showMessage("Erro ao carregar itens:", "error");
         items = [];
     }
+}
+
+//Adiciona uma borda vermelha ao campo com erro e exibe a mensagem correspondente
+function setFieldError(element, message) {
+    if (!element) return;
+
+    element.classList.add("input-error");
+
+    if (message) {
+        showMessage(message, "warning");
+    }
+}
+
+//Remove a borda vermelha do campo
+function clearFieldError(element) {
+    if (!element) return;
+
+    element.classList.remove("input-error");
+}
+
+//Vincula eventos de input e change para limpar erros ao corrigir os campos
+function bindFieldClear() {
+    const fields = ["productSelect", "quantityInput"];
+
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        el.addEventListener("input", () => clearFieldError(el));
+        el.addEventListener("change", () => clearFieldError(el));
+    });
 }

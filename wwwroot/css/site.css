@@ -71,3 +71,41 @@
 .footer__small-text {
     font-size: 12px;
 }
+
+/* ALERTAS */
+.alert {
+    padding: 0.75rem; /* p-3 */
+    border-radius: 0.5rem; /* rounded-lg */
+    font-size: 0.875rem; /* text-sm */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+/* ERROR */
+.alert-error {
+    background-color: #fef2f2; /* bg-red-50 */
+    color: #dc2626; /* text-red-600 */
+}
+
+/* SUCCESS */
+.alert-success {
+    background-color: #f0fdf4; /* bg-green-50 */
+    color: #16a34a; /* text-green-600 */
+}
+
+/* WARNING */
+.alert-warning {
+    background-color: #fefce8; /* bg-yellow-50 */
+    color: #ca8a04; /* text-yellow-600 */
+}
+
+/* INPUT COM ERRO */
+.input-error {
+    border: 1px solid #ef4444; /* border-red-500 */
+}
+
+/* FOCUS INPUT ERROR */
+.input-error:focus {
+    outline: none;
+    border-color: #ef4444; /* border-red-500 */
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5); /* simula focus:ring-red-500 */
+}

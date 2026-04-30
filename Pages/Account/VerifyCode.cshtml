@@ -10,6 +10,12 @@
 }
 
 <form method="post" role="form" aria-describedby="codigoHelp">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-error">
+            <div asp-validation-summary="All"></div>
+        </div>
+    }
     <div class="flex flex-wrap gap-3 justify-center">
         <input type="tel" maxlength="1" inputmode="numeric" name="Input.Digit1"
                 class="w-10 h-10 sm:w-12 sm:h-12 text-lg sm:text-xl font-mono text-center rounded-lg border border-gray-300 login__input focus:ring code-input"
@@ -32,9 +38,7 @@
                 aria-label="Dígito 5" />
     </div>
 
-    <input type="hidden" asp-for="Input.Code" id="hiddenCode" />
-
-    <span asp-validation-for="Input.Code" class="text-red-600 text-center mt-3 text-xs block"></span>
+    <input type="hidden" asp-for="Input.Code" id="hiddenCode" class="@InputErrorClass("Input.Code")" />
 
     <button type="submit" class="w-full text-white py-2 rounded-lg transition button--primary mt-6">
         Validar
@@ -47,4 +51,13 @@
 
 @section Scripts {
     <script src="~/js/account/verify-code.js"></script>
+}
+
+@functions {
+    public string InputErrorClass(string key)
+    {
+        return ViewData.ModelState.TryGetValue(key, out var entry) && entry.Errors.Count > 0
+            ? "input-error"
+            : "";
+    }
 }

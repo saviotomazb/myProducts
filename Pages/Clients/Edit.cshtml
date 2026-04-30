@@ -22,6 +22,20 @@
         </div>
 
         <form method="post" class="shadow bg-white rounded-lg mt-6 p-6">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-error">
+                    <div asp-validation-summary="All"></div>
+                </div>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div id="success-message" class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
             <input type="hidden" asp-for="ClientVM.ClientId" />
 
             <section class="space-y-4">
@@ -31,19 +45,17 @@
                     <div class="flex flex-col gap-4 sm:grid sm:grid-cols-[2fr_1fr_auto] sm:items-end">
 
                         <div class="flex flex-col">
-                            <span asp-validation-for="ClientVM.FullName" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
 
                             <label class="text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">
                                 Nome completo:
                             </label>
 
                             <input asp-for="ClientVM.FullName"
-                                   class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                                   class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ClientVM.FullName")"
                                    placeholder="Digite o nome completo do cliente" />
                         </div>
 
                         <div class="flex flex-col">
-                            <span asp-validation-for="ClientVM.PhoneNumber" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
 
                             <label class="text-sm font-medium text-gray-700 mb-1">
                                 Telefone:
@@ -52,7 +64,7 @@
                             <input asp-for="ClientVM.PhoneNumber"
                                    id="phone"
                                    maxlength="15"
-                                   class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                                   class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ClientVM.PhoneNumber")"
                                    placeholder="(00) 00000-0000" />
                         </div>
 
@@ -73,17 +85,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-4">
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="ClientVM.City" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Cidade:
                         </label>
                         <input asp-for="ClientVM.City"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ClientVM.City")"
                                placeholder="Digite a cidade" />
                     </div>
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="ClientVM.State" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Estado
                         </label>
@@ -91,7 +101,8 @@
                                 asp-items="Model.States"
                                 id="state"
                                 class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input
-                            @(string.IsNullOrEmpty(Model.ClientVM?.State) ? "text-gray-400" : "text-gray-700")">
+                                @InputErrorClass("ClientVM.State")
+                                @(string.IsNullOrEmpty(Model.ClientVM?.State) ? "text-gray-400" : "text-gray-700")">
                         </select>
                     </div>
 
@@ -100,22 +111,20 @@
                 <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-4">
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="ClientVM.Street" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Rua:
                         </label>
                         <input asp-for="ClientVM.Street"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ClientVM.Street")"
                                placeholder="Digite a rua" />
                     </div>
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="ClientVM.HouseNumber" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Número:
                         </label>
                         <input asp-for="ClientVM.HouseNumber"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ClientVM.HouseNumber")"
                                placeholder="Digite o número" />
                     </div>
 
@@ -124,22 +133,20 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="ClientVM.District" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Bairro:
                         </label>
                         <input asp-for="ClientVM.District"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ClientVM.District")"
                                placeholder="Digite o bairro" />
                     </div>
 
                     <div class="flex flex-col">
-                        <span asp-validation-for="ClientVM.Complement" class="text-red-600 text-xs mb-1 min-h-[16px]"></span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Complemento:
                         </label>
                         <input asp-for="ClientVM.Complement"
-                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input"
+                               class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ClientVM.Complement")"
                                placeholder="Apartamento, bloco, referência..." />
                     </div>
 
@@ -241,3 +248,12 @@
         }
     });
 </script>
+
+@functions {
+    public string InputErrorClass(string key)
+    {
+        return ViewData.ModelState.TryGetValue(key, out var entry) && entry.Errors.Count > 0
+            ? "input-error"
+            : "";
+    }
+}

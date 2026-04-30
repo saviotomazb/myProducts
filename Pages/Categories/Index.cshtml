@@ -21,20 +21,27 @@
         </div>
         <form method="post" class="shadow bg-white rounded-lg mb-12 p-6">
             <h2 class="text-lg font-semibold mb-4 text-center sm:text-left">Cadastrar nova categoria</h2>
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-error">
+                    <div asp-validation-summary="All"></div>
+                </div>
+            }
+
             @if (TempData["SuccessMessage"] != null)
             {
-                <div class="mb-4 mt-2 text-green-600 text-xs text-center sm:text-left" id="success-message">@TempData["SuccessMessage"]</div>
+                <div id="success-message" class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
             }
-            <span asp-validation-for="Input.Name" class="block w-full text-red-600 text-xs text-center sm:text-left mb-2"></span>
             <div class="flex flex-col items-center sm:flex-row sm:space-x-4">
                 <label for="Nome" class="text-sm font-medium text-gray-700 mb-2 sm:mb-0 sm:mr-2 after:content-['*'] after:ml-1 after:text-red-500">Nome da categoria:</label>
-                <input type="text" asp-for="Input.Name" placeholder="Insira o nome que deseja cadastrar" class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input mb-2 sm:mb-0" />
+                <input type="text" asp-for="Input.Name" placeholder="Insira o nome que deseja cadastrar" class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.Name") mb-2 sm:mb-0" />
                 <button type="submit" class="text-white p-2 px-6 rounded-lg transition button--success">Cadastrar categoria</button>
             </div>
         </form>
         <form method="get" class="shadow bg-white rounded-lg p-6">
             <h2 class="text-lg font-semibold mb-4 text-center sm:text-left">Buscar categoria</h2>
-            <span asp-validation-for="SearchCategory" class="block w-full text-red-600 text-xs text-center sm:text-left mb-2"></span>
             <div class="flex flex-col items-center sm:flex-row sm:space-x-4 mb-4">
                 <label for="Nome" class="text-sm font-medium text-gray-700 mb-2 sm:mb-0">Nome:</label>
                 <input type="text" asp-for="SearchCategory" value="@Model.SearchCategory" placeholder="Procure o nome da categoria" class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" />
@@ -99,7 +106,16 @@
                 msg.classList.add('opacity-0');
                 setTimeout(() => msg.remove(), 500);
 
-            }, 4000);
+            }, 3000);
         }
     });
 </script>
+
+@functions {
+    public string InputErrorClass(string key)
+    {
+        return ViewData.ModelState.TryGetValue(key, out var entry) && entry.Errors.Count > 0
+            ? "input-error"
+            : "";
+    }
+}
