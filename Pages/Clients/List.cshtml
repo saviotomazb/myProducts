@@ -7,8 +7,8 @@
 <div class="pt-16 sm:pt-20 lg:pt-24 px-4 sm:px-6 lg:px-8">
     <div class="pt-8 sm:pt-12 lg:pt-16 pb-8 sm:pb-12 lg:pb-16">
 
-        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col items-start text-left">
                 <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Consultar Clientes</h1>
                 <p>Busque e visualize os clientes cadastrados no sistema.</p>
             </div>
@@ -23,7 +23,7 @@
                 </div>
             }
 
-            <div class="flex flex-col items-center sm:flex-row sm:space-x-4 mb-4">
+            <div class="flex flex-col items-start sm:flex-row sm:items-center gap-3 sm:gap-4 mb-5">
                 <label for="SearchClient" class="text-sm font-medium text-gray-700 mb-2 sm:mb-0">
                     Nome:
                 </label>
@@ -31,10 +31,10 @@
                 <input type="text"
                        asp-for="SearchClient"
                        placeholder="Procure pelo nome do cliente"
-                       class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("SearchClient")" />
+                       class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm login__input focus:ring @InputErrorClass("SearchClient")" />
 
                 <button type="submit"
-                        class="text-white p-2 px-6 rounded-lg transition button--primary mt-2 sm:mt-0">
+                        class="self-start sm:self-auto w-auto text-white px-5 py-2 rounded-lg transition button--primary">
                     Buscar
                 </button>
             </div>
@@ -49,8 +49,8 @@
                 else
                 {
                     <table class="min-w-full divide-y divide-gray-300">
-                        <thead class="bg-gray-100">
-                            <tr class="text-left font-medium text-gray-500 text-uppercase tracking-wider text-xs sm:text-sm">
+                        <thead class="bg-gray-100 text-left">
+                            <tr class="font-medium text-gray-500 text-uppercase tracking-wider text-xs sm:text-sm">
                                 <th class="px-3 sm:px-6 py-4">Nome</th>
                                 <th class="px-3 sm:px-6 py-4">Telefone</th>
                                 <th class="px-3 sm:px-6 py-4">Cidade</th>
@@ -64,14 +64,14 @@
                         <tbody class="bg-white divide-y divide-gray-300">
                             @foreach (var i in Model.ClientsVM)
                             {
-                                <tr class="hover:bg-gray-100 text-left">
+                                <tr class="hover:bg-gray-100">
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.FullName</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.PhoneNumber</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.City</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.State</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.CreatedAtFormatted</td>
 
-                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap space-x-2">
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap flex gap-2">
                                         <a class="link--primary"
                                                asp-page="/Clients/Edit"
                                                asp-route-id="@i.ClientId">
@@ -94,7 +94,7 @@
 
                 @if (Model.TotalPages > 1)
                 {
-                    <div class="flex justify-center mt-4 space-x-2">
+                    <div class="flex flex-wrap justify-center items-center gap-2 mt-6">
 
                         <a class="px-4 py-2 bg-gray-200 rounded @(Model.PageNumber == 1 ? "opacity-50 pointer-events-none" : "")"
                                href="?SearchClient=@Model.SearchClient&PageNumber=@(Model.PageNumber - 1)">
