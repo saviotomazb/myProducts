@@ -13,12 +13,9 @@
                 pt-8 sm:pt-12 lg:pt-16
                 pb-8 sm:pb-12 lg:pb-16
                 ">
-        <div class="flex items-center justify-center mb-6">
-            <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold">Editar categoria</h1>
-        </div>
 
-        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col items-start text-left sm:items-start sm:text-left">
                 <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Editar categoria</h1>
                 <p>Edite e atualize os dados da categoria selecionada.</p>
             </div>
@@ -32,25 +29,23 @@
                 </div>
             }
             <input type="hidden" asp-for="CategoryVM.Id" />
-            <div class="flex flex-col items-center sm:flex-row sm:items-center sm:space-x-4 w-full">
-                <div class="flex flex-col w-full">
-                    <div class="flex flex-col items-center justify-center sm:flex-row sm:items-center sm:justify-start sm:space-x-2 w-full">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 w-full">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-2 w-full">
                         <label for="Nome" class="text-sm font-medium text-gray-700 whitespace-nowrap mb-2 sm:mb-0 sm:mr-2">Nome da categoria:</label>
                         <input type="text" asp-for="CategoryVM.Name" placeholder="Insira o novo nome" class="w-full flex-grow sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm login__input focus:ring @InputErrorClass("CategoryVM.Name")" />
-                    </div>
                 </div>
-                <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+                <div class="flex items-center space-x-2">
                     <label for="Ativa" class="text-sm font-medium text-gray-500">Ativo?</label>
                     <input asp-for="CategoryVM.IsActive" type="checkbox" class="h-4 w-4 border-gray-300"/>
                 </div>
             </div>
-            <div class="text-sm text-gray-500 space-y-1 mt-4 text-center sm:text-left mx-auto sm:mx-0">
+            <div class="text-sm text-gray-500 space-y-1 mt-4 text-left sm:text-left mx-auto sm:mx-0">
                 <p>Criado em: @Model.CategoryVM.CreatedAtFormatted</p>
                 <p>Última modificação: @Model.CategoryVM.LastModifiedFormatted</p>
             </div>
-            <div class="flex flex-col sm:flex-row items-center sm:space-x-4 mt-4">
-                <button type="submit" class="text-white p-2 px-6 rounded-lg transition bg-green-500 hover:bg-green-600 cursor-pointer mt-2 sm:mt-0">Salvar</button>
-                <a asp-page="/Categories/Index" class="text-xs link-secondary underline mt-2 sm:mt-0">Cancelar</a>
+            <div class="flex items-center gap-3 mt-6">
+                <button type="submit" class="text-white px-5 py-2 rounded-lg bg-green-500 hover:bg-green-600">Salvar</button>
+                <a asp-page="/Categories/Index" class="text-xs link-secondary underline">Cancelar</a>
             </div>
         </form>
     </div>

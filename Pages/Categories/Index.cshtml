@@ -13,14 +13,14 @@
                 pt-8 sm:pt-12 lg:pt-16
                 pb-8 sm:pb-12 lg:pb-16
                 ">
-        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div class="flex flex-col items-start text-left">
                 <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Categorias</h1>
                 <p>Preencha os dados abaixo para cadastrar uma nova categoria.</p>
             </div>
         </div>
         <form method="post" class="shadow bg-white rounded-lg mb-12 p-6">
-            <h2 class="text-lg font-semibold mb-4 text-center sm:text-left">Cadastrar nova categoria</h2>
+            <h2 class="text-lg font-semibold mb-4 text-left">Cadastrar nova categoria</h2>
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="alert alert-error">
@@ -34,18 +34,18 @@
                     @TempData["SuccessMessage"]
                 </div>
             }
-            <div class="flex flex-col items-center sm:flex-row sm:space-x-4">
+            <div class="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-4">
                 <label for="Nome" class="text-sm font-medium text-gray-700 mb-2 sm:mb-0 sm:mr-2 after:content-['*'] after:ml-1 after:text-red-500">Nome da categoria:</label>
                 <input type="text" asp-for="Input.Name" placeholder="Insira o nome que deseja cadastrar" class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.Name") mb-2 sm:mb-0" />
-                <button type="submit" class="text-white p-2 px-6 rounded-lg transition button--success">Cadastrar categoria</button>
+                <button type="submit" class="self-start sm:self-auto text-white px-5 py-2 rounded-lg button--success">Cadastrar categoria</button>
             </div>
         </form>
         <form method="get" class="shadow bg-white rounded-lg p-6">
-            <h2 class="text-lg font-semibold mb-4 text-center sm:text-left">Buscar categoria</h2>
-            <div class="flex flex-col items-center sm:flex-row sm:space-x-4 mb-4">
+            <h2 class="text-lg font-semibold mb-4 text-left sm:text-left">Buscar categoria</h2>
+            <div class="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-4 mb-4">
                 <label for="Nome" class="text-sm font-medium text-gray-700 mb-2 sm:mb-0">Nome:</label>
-                <input type="text" asp-for="SearchCategory" value="@Model.SearchCategory" placeholder="Procure o nome da categoria" class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input" />
-                <button type="submit" class="text-white p-2 px-6 rounded-lg transition button--primary mt-2 sm:mt-0">Buscar</button>
+                <input type="text" asp-for="SearchCategory" value="@Model.SearchCategory" placeholder="Procure o nome da categoria" class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input mb-2 sm:mb-0" />
+                <button type="submit" class="self-start sm:self-auto text-white px-5 py-2 rounded-lg button--primary">Buscar</button>
             </div>
             <div class="overflow-x-auto">
                 @if (!Model.CategoriesVM.Any())
