@@ -9,13 +9,13 @@
 <div class="pt-16 sm:pt-20 lg:pt-24 px-4 sm:px-6 lg:px-8">
     <div class="pt-8 sm:pt-12 lg:pt-16 pb-8 sm:pb-12 lg:pb-16">
 
-        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col items-start text-left">
                 <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Orçamentos</h1>
                 <p>Preencha os dados abaixo para cadastrar um novo orçamento.</p>
             </div>
             <a asp-page="/Quotes/List"
-                   class="h-fit shrink-0 text-white p-2 px-6 rounded-lg transition button--primary">
+                   class="self-start sm:self-auto h-fit shrink-0 text-white px-5 py-2 rounded-lg transition button--primary">
                 Consultar orçamentos
             </a>
         </div>
@@ -35,7 +35,7 @@
                     </div>
                 }
 
-                <section class="border-b border-gray-200 pb-6 mb-6">
+            <section class="border-b border-gray-200 pb-6 mb-6">
                 <div class="text-sm font-semibold text-gray-700 mb-4">
                     <span>
                         Pedido:
@@ -45,7 +45,8 @@
                         }
                     </span>
                 </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">Cliente:</label>
                             <select asp-for="Input.ClientId" asp-items="Model.Clients" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.ClientId")"></select>
@@ -59,8 +60,8 @@
                 </section>
                 <section class="border-b border-gray-200 pb-6 mb-6">
                     <h2 class="text-sm font-semibold text-gray-700 mb-4">Itens do orçamento</h2>
-                        <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
-                            <div class="flex-1">
+                <div class="grid grid-cols-1 lg:grid-cols-[1fr_120px_160px_auto] gap-4 items-end">
+                            <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:ml-1 after:text-red-500">Produto:</label>
                                 <select id="productSelect"
                                         class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input">
@@ -86,48 +87,57 @@
                                 <input type="text" class="w-full p-2 rounded-lg border border-gray-300 bg-gray-100 text-sm cursor-not-allowed focus:ring login__input" 
                                 readonly placeholder="R$0,00" id="unitPrice"/>
                             </div>
-                            <button type="button" class="mt-6 sm:mt-6 h-fit shrink-0 text-white p-2 px-6 rounded-lg transition button--primary" id="btnAddItem">Adicionar</button>
+                            <button type="button"
+                                    class="self-stretch sm:self-auto w-full sm:w-auto text-white px-5 py-2 rounded-lg transition button--primary"
+                                    id="btnAddItem">
+                                Adicionar
+                            </button>
                             <input type="hidden" id="itemsJson" asp-for="ItemsJson" />
                         </div>
                 </section>
                 <section class="border-b border-gray-200 pb-6 mb-6">
                     <h2 class="text-sm font-semibold text-gray-700 mb-4">Produtos adicionados</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm border border-gray-200 rounded-lg">
-                            <thead class="bg-gray-50">
+                    <div class="overflow-x-auto rounded-lg border border-gray-200">
+                       <table class="min-w-full text-sm">
+                            <thead class="bg-gray-50 text-gray-500 tracking-wider text-xs">
                                 <tr>
-                                    <th class="text-left p-2">Produto</th>
-                                    <th class="text-center p-2">Quantidade</th>
-                                    <th class="text-right p-2">Valor</th>
-                                    <th class="text-right p-2">Subtotal</th>
-                                    <th class="text-center p-2">Ação</th>
+                                    <th class="text-left px-3 sm:px-6 py-4">Produto</th>
+                                    <th class="text-left px-3 sm:px-6 py-4">Quantidade</th>
+                                    <th class="text-left px-3 sm:px-6 py-4">Valor</th>
+                                    <th class="text-left px-3 sm:px-6 py-4">Subtotal</th>
+                                    <th class="text-left px-3 sm:px-6 py-4">Ação</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                <tr>
+                                    <td colspan="5" class="px-6 py-6 text-center text-sm text-gray-500">
+                                        Nenhum produto adicionado.
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="flex justify-end mt-4">
+                    <div class="flex justify-end mt-5">
                         <div class="text-right">
                             <p class="text-sm text-gray-600">Total</p>
-                            <p id="totalAmount" class="text-lg font-semibold">R$ 0,00</p>
+                            <p id="totalAmount" class="text-xl font-semibold">R$ 0,00</p>
                         </div>
                     </div>
                 </section>
                 <section>
                     <h2 class="text-sm font-semibold text-gray-700 mb-4">Finalização</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Validade do orçamento:</label>
                             <input type="date" class="w-full sm:w-60 p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.ValidUntil")" asp-for="Input.ValidUntil"/>
                         </div>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Observações:</label>
-                        <textarea rows="3" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input resize-none @InputErrorClass("Input.Notes")" asp-for="Input.Notes"></textarea>
-                    </div>
-                    <div class="flex justify-center sm:justify-end">
-                    <button type="submit" class="w-full sm:w-auto h-fit shrink-0 text-white p-2 px-6 rounded-lg transition button--success">Cadastrar orçamento</button>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Observações:</label>
+                            <textarea rows="4" class="w-full p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input resize-none @InputErrorClass("Input.Notes")" asp-for="Input.Notes"></textarea>
+                        </div>
+                    <div class="flex justify-start sm:justify-end mt-6">
+                        <button type="submit" class="w-full sm:w-auto text-white px-5 py-2 rounded-lg transition button--success">Cadastrar orçamento</button>
                     </div>
                 </section>
         </form>

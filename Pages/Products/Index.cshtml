@@ -13,17 +13,14 @@
                 pt-8 sm:pt-12 lg:pt-16
                 pb-8 sm:pb-12 lg:pb-16
                 ">
-        @* <div class="flex items-center justify-center mb-6">
-            <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold">Produtos</h1>
-        </div> *@
-        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div class="flex flex-col items-start text-left">
                 <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Produtos</h1>
                 <p>Preencha os dados abaixo para cadastrar um novo produto.</p>
             </div>
         </div>
         <form method="post" class="shadow bg-white rounded-lg mb-12 p-6">
-            <h2 class="text-lg font-semibold mb-4 text-center sm:text-left">Cadastrar novo produto</h2>
+            <h2 class="text-lg font-semibold mb-4 text-left">Cadastrar novo produto</h2>
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="alert alert-error">
@@ -37,17 +34,17 @@
                 </div>
             }
             <div class="space-y-4">
-                <div class="flex flex-col items-center sm:flex-row sm:space-x-4">
+                <div class="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-4">
                     <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Nome do produto:</label>
                     <input type="text" asp-for="Input.Name" placeholder="Insira o nome que deseja cadastrar"
                            class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.Name")" />
                 </div>
-                <div class="flex flex-col items-center sm:flex-row sm:space-x-4">
+                <div class="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-4">
                     <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0">Descrição:</label>
                     <textarea asp-for="Input.Description" placeholder="Insira uma descrição"
                               class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.Description")"></textarea>
                 </div>
-                <div class="flex flex-col items-center sm:flex-row sm:space-x-4 sm:mb-4 mb-0">
+                <div class="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-4">
                     <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Categoria:</label>
                     <select asp-for="Input.CategoryId" asp-items="Model.CategoriesList"
                             class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("Input.CategoryId")">
@@ -56,16 +53,16 @@
                 </div>
             </div>
 
-            <div class="flex flex-col items-center sm:flex-row mt-2 sm:mt-0">
+            <div class="flex items-center mt-2">
                 <button type="submit" class="text-white p-2 px-6 rounded-lg transition button--success">Cadastrar produto</button>
             </div>
         </form>
         <form method="get" class="shadow bg-white rounded-lg p-6">
-            <h2 class="text-lg font-semibold mb-4 text-center sm:text-left">Buscar produto</h2>
-            <div class="flex flex-col items-center sm:flex-row sm:space-x-4 mb-4">
+            <h2 class="text-lg font-semibold mb-4 text-left">Buscar produto</h2>
+            <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:space-x-4 mb-4">
                 <label for="Nome" class="text-sm font-medium text-gray-700 mb-2 sm:mb-0">Nome:</label>
                 <input type="text" asp-for="SearchProduct" value="@Model.SearchProduct" placeholder="Procure o nome do produto" class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("SearchProduct")" />
-                <button type="submit" class="text-white p-2 px-6 rounded-lg transition button--primary mt-2 sm:mt-0">Buscar</button>
+                <button type="submit" class="self-start sm:self-auto w-auto text-white px-5 py-2 rounded-lg transition button--primary">Buscar</button>
             </div>
             <div class="overflow-x-auto">
                 @if (!Model.ProductsVM.Any())
@@ -77,7 +74,7 @@
                 else
                 {
                     <table class="min-w-full divide-y divide-gray-300">
-                        <thead class="bg-gray-100">
+                        <thead class="bg-gray-100 text-left">
                             <tr class="text-left font-medium text-gray-500 text-uppercase tracking-wider text-xs sm:text-sm">
                                 <th class="px-3 sm:px-6 py-4">Nome do produto</th>
                                 <th class="px-3 sm:px-6 py-4">Categoria</th>
@@ -90,7 +87,7 @@
                         <tbody class="bg-white divide-y divide-gray-300">
                             @foreach (var i in Model.ProductsVM)
                             {
-                                <tr class="hover:bg-gray-100 text-left">
+                                <tr class="hover:bg-gray-100">
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.Name</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.CategoryName</td>
                                     <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-truncate">@i.CreatedAtFormatted</td>
@@ -107,7 +104,7 @@
                 }
                 @if (Model.TotalPages > 1)
                 {
-                    <div class="flex justify-center mt-4">
+                    <div class="flex flex-wrap justify-center items-center gap-2 mt-6">
                         <a class="px-4 py-2 bg-gray-200 rounded disabled:opacity-50 cursor-not-allowed"
                            href="?SearchProduct=@Model.SearchProduct&PageNumber=@(Model.PageNumber - 1)" @(Model.PageNumber == 1 ? "disabled" : "")>Anterior</a>
                         <span class="px-4 py-2 text-gray-500">Página @Model.PageNumber de @Model.TotalPages</span>

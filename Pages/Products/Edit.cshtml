@@ -14,8 +14,8 @@
                 pb-8 sm:pb-12 lg:pb-16
                 ">
 
-        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col items-start text-left">
                 <h1 class="text-xl sm:text-1xl lg:text-2xl font-bold mb-2">Editar produto</h1>
                 <p>Edite e atualize os dados do produto selecionado.</p>
             </div>
@@ -35,35 +35,37 @@
                     @TempData["SuccessMessage"]
                 </div>
             }
-            <div class="flex flex-col items-center sm:flex-row sm:space-x-4">
-                <label class="sm:w-32 whitespace-nowrap text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Nome do produto:</label>
+            <div class="space-y-4">
+                <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:space-x-4">
+                    <label class="sm:w-32 whitespace-nowrap text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Nome do produto:</label>
             
-                <div class="flex w-full flex-col sm:flex-row items-center sm:space-x-4 space-y-2 sm:space-y-0">
-                    <input type="text" asp-for="ProductVM.Name" placeholder="Insira o nome que deseja salvar"
-                           class="w-full sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ProductVM.Name")" />
+                    <div class="flex w-full flex-col gap-2 sm:flex-row sm:items-end sm:space-x-4">
+                        <input type="text" asp-for="ProductVM.Name" placeholder="Insira o nome que deseja salvar"
+                               class="w-full sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ProductVM.Name")" />
 
-                    <div class="hidden sm:flex items-center space-x-2 ml-4 whitespace-nowrap sm:ml-auto">
-                        <label class="text-sm font-medium text-gray-500">Ativo?</label>
-                        <input asp-for="ProductVM.IsActive" type="checkbox" id="isActiveDesktop" class="h-4 w-4 border-gray-300" />
+                        <div class="hidden sm:flex items-center space-x-2 ml-4 whitespace-nowrap sm:ml-auto">
+                            <label class="text-sm font-medium text-gray-500">Ativo?</label>
+                            <input asp-for="ProductVM.IsActive" type="checkbox" id="isActiveDesktop" class="h-4 w-4 border-gray-300" />
+                        </div>
                     </div>
                 </div>
-            </div>
             
-            <div class="flex flex-col items-center sm:flex-row sm:space-x-4">
-                <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0">Descrição:</label>
-                <textarea asp-for="ProductVM.Description" placeholder="Insira uma descrição"
-                          class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ProductVM.Description")"></textarea>
+                <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:space-x-4">
+                    <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0">Descrição:</label>
+                    <textarea asp-for="ProductVM.Description" placeholder="Insira uma descrição"
+                              class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ProductVM.Description")"></textarea>
+                </div>
+
+                <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:space-x-4">
+                    <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Categoria:</label>
+                    <select asp-for="ProductVM.CategoryId" asp-items="Model.CategoriesList"
+                            class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ProductVM.CategoryId")">
+                        <option value="" disabled>Selecione</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="flex flex-col items-center sm:flex-row sm:space-x-4 sm:mb-4 mb-0">
-                <label class="sm:w-32 text-sm font-medium text-gray-700 mb-2 sm:mb-0 after:content-['*'] after:ml-1 after:text-red-500">Categoria:</label>
-                <select asp-for="ProductVM.CategoryId" asp-items="Model.CategoriesList"
-                        class="w-full sm:flex-grow sm:max-w-5xl p-2 rounded-lg border border-gray-300 text-sm focus:ring login__input @InputErrorClass("ProductVM.CategoryId")">
-                    <option value="" disabled>Selecione</option>
-                </select>
-            </div>
-
-            <div class="sm:hidden flex justify-center mt-4">
+            <div class="sm:hidden flex justify-start mt-4">
                 <label class="inline-flex items-center space-x-2 text-sm font-medium text-gray-600">
                     <input type="checkbox"
                            id="isActiveMobile"
@@ -72,13 +74,13 @@
                 </label>
             </div>
 
-            <div class="text-sm text-gray-500 space-y-1 mt-4 text-center sm:text-left mx-auto sm:mx-0">
+            <div class="text-sm text-gray-500 space-y-1 mt-4 text-left">
                 <p>Criado em: @Model.ProductVM.CreatedAtFormatted</p>
                 <p>Última modificação: @Model.ProductVM.LastModifiedFormatted</p>
             </div>
-            <div class="flex flex-col sm:flex-row items-center sm:space-x-4 mt-4">
-                <button type="submit" class="text-white p-2 px-6 rounded-lg transition bg-green-500 hover:bg-green-600 cursor-pointer mt-2 sm:mt-0">Salvar</button>
-                <a asp-page="/Products/Index" class="text-xs link-secondary underline mt-2 sm:mt-0">Cancelar</a>
+            <div class="flex flex-wrap items-center gap-3 mt-6">
+                <button type="submit" class="text-white px-5 py-2 rounded-lg transition bg-green-500 hover:bg-green-600">Salvar</button>
+                <a asp-page="/Products/Index" class="text-xs link-secondary underline">Cancelar</a>
             </div>
         </form>
     </div>
