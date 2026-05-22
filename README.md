@@ -6,7 +6,7 @@
 ![GitHub open issues](https://img.shields.io/github/issues/saviotomazb/myProducts?style=for-the-badge)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/saviotomazb/myProducts?style=for-the-badge)
 
-<img src="wwwroot/images/Logotipo.png" alt="Logotipo do MyProducts">
+<img src="wwwroot/images/Logotipo_branco.png" alt="Logotipo do MyProducts">
 
 > O MyProducts é uma aplicação web para cadastro de produtos, categorias, clientes e geração de orçamentos. O sistema também conta com autenticação de usuários, recuperação de senha por e-mail, registros de logs e uma área de dashboard para acompanhar dados operacionais.
 
@@ -133,6 +133,6 @@ Agradecemos as seguintes pessoas que contribuiram para este projeto:
 
 Quer fazer parte desse projeto? Abra uma issue ou envie uma pull request com melhorias, correções ou novas funcionalidades.
 
-## 📝 Licenca
+## 📝 Licença
 
 Esse projeto esta sob licença ISC. Veja o arquivo [package.json](package.json) para mais detalhes.
